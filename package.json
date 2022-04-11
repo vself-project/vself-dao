@@ -1,0 +1,16 @@
+{
+  "name": "vself-dao",
+  "version": "1.0.0",
+  "description": "Source of truth for vSelf DAO root contracts / CLI",
+  "main": "service.js",
+  "repository": "git@github.com:vself-project/vself-dao.git",
+  "author": "ilerik",
+  "license": "MIT",
+  "scripts": {
+    "start": "node service.js"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "gun": "^0.2020.1236"
+  }
+}

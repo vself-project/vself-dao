@@ -30,10 +30,30 @@ As we have already discussed what vSelf might look like eventually, in this sect
 The main risk we want to avoid is dependence on service providers who can disrupt or censor our services for some reason without our consent. So we made particular choices for our codebase and tech stack to mitigate this kind of threat.
 
 1. For the source of truth and governance / economic layer we have chosen NEAR technology as it's the best in class of carbon neutral scalable proof-of-stake blockchain.
-1. For the communication layer AND database solution we chose to use GunDB peer-to-peer
+1. For the communication layer AND database solution we chose to use GunDB peer-to-peer graph database.
 1. For the large objects storage we are going to integrate different solutions (Google Storage, NEAR.Machina, Filecoin, Swarm).
 1. Open source tech like Kubernetes + Docker is used for the cloud orchestration.
 
 As we need to host our cloud services somewhere we currently use GCloud which poses kind of deplatforming threat. This can be addressed by incentivisation of cloud infrastructure providers and as well as making our cloud include more hosting providers with time.
 
-[PIC]
+Our codebase is stored on GitHub, and consists of the following:
+- Cloud configuration, design documentation
+- vSelf smart contracts (business logic)
+- Dockerized vSelf node which contains business logic:
+    1. NEAR Indexer service (in Rust)
+    1. GUN database storage instance
+- vSelf tooling (CLI) + TS/JS SDK for application developers
+- vSelf progressiwe web application / identity wallet / API service (Next.js + tRPC)
+
+[Architecture](images/design.png)
+
+## Core logic TBD
+
+Informational model of user owned data:
+Root keypair and NEAR account:
+
+## Data flow TBD
+
+## Use cases TBD
+[Events](EVENTS.md)
+[Community](HQ.md)
