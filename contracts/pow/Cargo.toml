@@ -1,0 +1,13 @@
+[package]
+name = "pow-contract"
+version = "1.0.0"
+authors = ["vSelf team <ie@vself.app>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "4.0.0-pre.7"
+near-contract-standards = "4.0.0-pre.7"
+hex = "0.4.3"

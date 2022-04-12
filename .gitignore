@@ -2,3 +2,5 @@ node_modules
 
 # GUN DB local data
 data
+
+contracts/target
