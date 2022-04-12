@@ -24,8 +24,8 @@ const debug = process.argv.pop() === '--debug'
 // Note: see other flags in ./cargo/config. Unfortunately, you cannot set the
 // `--target option` in Cargo.toml.
 const buildCmd = debug
-  ? 'cargo build  --all --target wasm32-unknown-unknown'
-  : 'cargo build  --all --target wasm32-unknown-unknown --release'
+  ? 'cargo build --target wasm32-unknown-unknown'
+  : 'cargo build --target wasm32-unknown-unknown --release'
 
 // Execute the build command, storing exit code for later use
 const { code } = sh.exec(buildCmd)

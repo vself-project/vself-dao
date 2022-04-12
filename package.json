@@ -9,11 +9,15 @@
   "scripts": {
     "start": "node service.js",
     "contract:build:release": "node contracts/pow/compile.js",
-    "contract:build:debug": "node contracts/pow/compile.js --debug"
+    "contract:build:debug": "node contracts/pow/compile.js --debug",
+    "contract:dev:build_and_deploy": "yarn contract:build:release && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/pow_contract.wasm && env-cmd -f ./neardev/dev-account.env node contracts/pow/init.js"
   },
   "dependencies": {
     "express": "^4.17.3",
     "gun": "^0.2020.1236",
     "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0"
   }
 }

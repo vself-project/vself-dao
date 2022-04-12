@@ -3,4 +3,7 @@ node_modules
 # GUN DB local data
 data
 
+# Contracts
 contracts/target
+neardev
+creds
