@@ -2,13 +2,13 @@
 
 ## Synopsys
 
-vSelf project was formed around the idea of a libertarian future where people are happy to coexist not only with other humans, but with other sentient beings (including AIs), and of course mother nature. We believe that the time has come to start building reliable interface between person and cyberspace, which will allow us to trust our robotic counterparts. For example to manage our personal data and facilitate other aspects of our social / economic life.
+vSelf project was formed around the idea of a libertarian future where people are happy to coexist not only with other humans but with other sentient beings (including AIs) and, of course, mother nature. We believe that the time has come to start building a reliable interface between person and cyberspace, which will allow us to trust our robotic counterparts. For example, to manage our personal data and facilitate other aspects of our social and economic life.
 
-The only thing we can rely on is laws of physics. That brings cryptography and multiparty computation protocols to the table as the basis for the construction of self-sovereign systems. According to [cypherpunks manifesto]() this is enough what humanity needs to ensure it doesn't lose it's agency as well as remains in control. build
+The only thing we can rely on is the laws of physics. That brings cryptography and multiparty computation protocols to the table as the basis for the construction of self-sovereign systems. According to [cypherpunks manifesto](https://www.activism.net/cypherpunk/manifesto.html), it is enough for humanity’s needs to ensure that it doesn't lose its agency as well as remains in control.
 
 ## Design Rationale
 
-Self-soveregnity of current generation of dApps is highly questionable, as Morly Marlinspike has brilliantly demonstrated in his piece. A lot of infrastructure that is being built is either prone to cancel culture or politically centralized. The most successful dApp is still Satoshi's network, with others like Ethereum / Polkadot / NEAR building up momentum towards soverenigty and adoption.
+Self-soveregnity and level of decentralization of the current generation of dApps are highly questionable, as Moxie Marlinspike has brilliantly demonstrated in his piece. Many Web3 infrastructures are either prone to cancel culture or are politically centralized. The most successful dApp is still Satoshi's network, with others like Ethereum / Polkadot / NEAR building up momentum towards sovereignty and adoption.
 
 Below you can see a birds eye view on the whole vSelf system:
 
@@ -17,7 +17,7 @@ Below you can see a birds eye view on the whole vSelf system:
 1. (DevOps) vSelf Cloud => hosts vSelf services, delivers vSelf App
 1. (UI/UX) vSelf App => stores personal data and creates user experience
 
-This is probably the most generic setup for any dApp. In the begining operational and tech desicionss are full responsibility of vSelf top level management, but this approach allows us to gradually evolve toward more political decentralization. as it allow us to make this DAO future compatible. We also understand that we have to be fully opensource and open to public scrutinity.
+This is probably the most generic setup for any dApp. In the beginning operational and tech desicionss are full responsibility of vSelf top level management, but this approach allows us to gradually evolve toward more political decentralization. as it allow us to make this DAO future compatible. We also understand that we have to be fully opensource and open to public scrutinity.
 
 The other important part which is our adherence to open standarts and guidlines developed by international community of experts. That's why we look closely at DID and VC data models, which we use and adapt for our specific use cases.
 
