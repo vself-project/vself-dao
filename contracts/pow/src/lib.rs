@@ -1,15 +1,12 @@
-use near_sdk::json_types::Base64VecU8;
-use near_sdk::serde_json::json;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::collections::Vector;
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{env, log, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
-use near_sdk::collections::{ LookupMap, LazyOption, Vector, UnorderedSet };
+use near_sdk::{env, log, near_bindgen, AccountId, BorshStorageKey, PanicOnDefault};
 
 mod constants;
 pub mod views;
 
-#[derive(Clone)]
-#[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
+#[derive(Clone, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct EvidenceData {
     media_hash: String,
@@ -20,7 +17,7 @@ pub struct EvidenceData {
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
     owner_id: AccountId, // Owner ID
-    evidence: Vector<EvidenceData>
+    evidence: Vector<EvidenceData>,
 }
 
 #[derive(BorshSerialize, BorshStorageKey)]
@@ -32,20 +29,19 @@ enum StorageKey {
 impl Contract {
     /// Initializes the contract owned by `owner_id`
     #[init]
-    pub fn new() -> Self {    
+    pub fn new() -> Self {
         assert!(!env::state_exists(), "Already initialized");
         let owner_id = env::current_account_id(); // Who deployed owns
- 
+
         Self {
             owner_id: owner_id,
-            evidence: Vector::new(StorageKey::Evidence),            
+            evidence: Vector::new(StorageKey::Evidence),
         }
     }
-    
 
     /// Upload evidence fingerprint to blochchain
     #[payable]
-    pub fn upload_evidence(&mut self, evidence: EvidenceData) {    
+    pub fn upload_evidence(&mut self, evidence: EvidenceData) {
         let timestamp: u64 = env::block_timestamp();
         self.evidence.push(&evidence);
     }
