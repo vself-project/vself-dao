@@ -8,7 +8,7 @@ The only thing we can rely on is the laws of physics. That brings cryptography a
 
 ## Design Rationale
 
-Self-soveregnity and level of decentralization of the current generation of dApps are highly questionable, as Moxie Marlinspike has brilliantly demonstrated in his piece. Many Web3 infrastructures are either prone to cancel culture or are politically centralized. The most successful dApp is still Satoshi's network, with others like Ethereum / Polkadot / NEAR building up momentum towards sovereignty and adoption.
+Self-soveregnity and level of decentralization of the current generation of dApps are highly questionable, as Moxie Marlinspike has brilliantly demonstrated in [his piece](https://moxie.org/2022/01/07/web3-first-impressions.html). Many Web3 infrastructures are either prone to cancel culture or are politically centralized. The most successful dApp is still Satoshi's network, with others like Ethereum / Polkadot / NEAR building up momentum towards sovereignty and adoption.
 
 Below you can see a birds eye view on the whole vSelf system:
 
