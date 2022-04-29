@@ -20,13 +20,9 @@ console.log("..................................");
 // Check if the event has already been started and call start_event if it hasn't
 console.log("..................................");
 console.log("Send evidence ");
-// sh.exec(`near call ${contractName} upload_evidence '{"evidence": {
-//   "media_hash": "keepyoumotivatedwhileyoulearn",
-//   "metadata": "{"preloaded":${true},"name":"${ownerAccount}"}"
-// }}' --accountId ${ownerAccount}`);
 sh.exec(`near call ${contractName} upload_evidence '{"evidence": {
   "media_hash": "keepyoumotivatedwhileyoulearn",
-  "metadata": ""
+  "metadata": "preloaded"
 }}' --accountId ${ownerAccount}`);
 
 console.log("..................................");
