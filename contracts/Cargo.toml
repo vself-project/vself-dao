@@ -23,5 +23,5 @@ overflow-checks = true
 [workspace]
 members = [
     "pow",
-    "nft-reward"
+    "nft_reward"
 ]

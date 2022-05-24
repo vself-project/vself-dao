@@ -1,5 +1,5 @@
 [package]
-name = "nft-reward-contract"
+name = "nft_reward-contract"
 version = "1.0.0"
 authors = ["vSelf team <sk@vself.app>"]
 edition = "2021"

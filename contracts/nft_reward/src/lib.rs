@@ -13,7 +13,7 @@ use near_sdk::collections::{ LazyOption };
 use near_sdk::json_types::Base64VecU8;
 use near_sdk::serde_json::json;
 
-pub use constants::{BASE_URI, DATA_IMAGE_SVG_NEAR_ICON, ONE_NEAR, ONE_YOCTO, SINGLE_CALL_GAS};
+pub use constants::{BASE_URI, DATA_IMAGE_SVG_NEAR_ICON, ONE_YOCTO, SINGLE_CALL_GAS};
 
 #[derive(BorshSerialize, BorshStorageKey)]
 enum StorageKey {
@@ -79,7 +79,7 @@ impl Contract {
         let root_id = AccountId::try_from(contract_id).unwrap();
         
         // TODO media url and media hash
-        let media_url: String = String::from("image_url");
+        let media_url: String = String::from("https://s.marketwatch.com/public/resources/images/MW-HX580_opossu_ZG_20191231103449.jpg");
         let media_hash = Base64VecU8(env::sha256(media_url.as_bytes()));
 
         // Default to common token
