@@ -88,5 +88,5 @@ sh.exec(
 );
 console.log("..................................");
 
-// exit script with the same code as the build command
+// Exit script with the same code as the build command
 process.exit();
