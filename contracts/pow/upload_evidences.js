@@ -5,7 +5,7 @@
 const sh = require("shelljs");
 const fs = require("fs");
 const contractName =
-  process.env.CONTRACT_NAME ||
+  process.env.POW_CONTRACT ||
   fs.readFileSync("./neardev/dev-account").toString();
 const ownerAccount =
   process.env.MASTER_ACCOUNT ||

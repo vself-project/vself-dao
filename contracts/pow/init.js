@@ -5,7 +5,7 @@
 const sh = require("shelljs");
 
 const contractName =
-  process.env.CONTRACT_NAME ||
+  process.env.POW_CONTRACT ||
   fs.readFileSync("./neardev/dev-account").toString();
 const initCmd = `near call ${contractName} new --accountId ${contractName}`;
 

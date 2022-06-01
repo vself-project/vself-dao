@@ -7,7 +7,7 @@ use near_contract_standards::non_fungible_token::metadata::{
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{
-    env, log, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, Promise, PromiseOrValue
+    env, log, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey, PromiseOrValue
 };
 use near_sdk::collections::{ LazyOption };
 use near_sdk::json_types::Base64VecU8;
@@ -45,9 +45,9 @@ impl Contract {
         let metadata = NFTContractMetadata {
             spec: NFT_METADATA_SPEC.to_string(),
             name: "HASHD0X reward NFT".to_string(),
-            symbol: "HSHDX".to_string(),    // TODO ask main developer
-            icon: Some(DATA_IMAGE_SVG_NEAR_ICON.to_string()),    // TO DO ask Kraft
-            base_uri: Some(BASE_URI.to_string()),    // TODO ask main developer
+            symbol: "HSHDX".to_string(),
+            icon: Some(DATA_IMAGE_SVG_NEAR_ICON.to_string()),
+            base_uri: Some(BASE_URI.to_string()),
             reference: None,
             reference_hash: None,
         };
@@ -66,7 +66,7 @@ impl Contract {
         }                
     }
 
-    /// Mint nft ans send it to `username` account
+    /// Mint nft and send it to `username` account
     #[payable]
     pub fn send_reward(&mut self, username: String) -> TokenId {
         // Generate token_id
@@ -78,9 +78,9 @@ impl Contract {
         let contract_id = env::current_account_id();
         let root_id = AccountId::try_from(contract_id).unwrap();
         
-        // TODO media url and media hash
-        let media_url: String = String::from("https://s.marketwatch.com/public/resources/images/MW-HX580_opossu_ZG_20191231103449.jpg");
-        let media_hash = Base64VecU8(env::sha256(media_url.as_bytes()));
+        // Media url and media hash
+        let media_url: String = String::from("https://ipfs.io/ipfs/bafybeiaeqxby7j34wjmtymguntgi7y5pksaryw7wu6ade6gbbqhwykcoky");
+        let media_hash = Base64VecU8(env::sha256(media_url.as_bytes())); // TODO
 
         // Default to common token
         let token_metadata = TokenMetadata {
@@ -99,7 +99,6 @@ impl Contract {
         };
 
         // Mint NFT
-        // TODO ask main developer about mint + transfer
         self.nft_mint(token_id.clone(), root_id.clone(), token_metadata.clone());
 
         // Transfer NFT to new owner
@@ -116,7 +115,7 @@ impl Contract {
             })
             .to_string()
             .as_bytes(),
-            ONE_YOCTO,  // TODO ask main developer
+            ONE_YOCTO,
             SINGLE_CALL_GAS,
         );
         log!("Success! NFT transfering for {}! Token ID = {}", receiver_id.clone(), token_id.clone());
@@ -144,7 +143,6 @@ impl Contract {
 
 // Implement NFT standart
 near_contract_standards::impl_non_fungible_token_core!(Contract, tokens);
-near_contract_standards::impl_non_fungible_token_approval!(Contract, tokens);
 near_contract_standards::impl_non_fungible_token_enumeration!(Contract, tokens);
 
 #[near_bindgen]
