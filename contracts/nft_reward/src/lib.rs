@@ -44,8 +44,8 @@ impl Contract {
 
         let metadata = NFTContractMetadata {
             spec: NFT_METADATA_SPEC.to_string(),
-            name: "HASHD0X reward NFT".to_string(),
-            symbol: "HSHDX".to_string(),
+            name: "Hashdox Reward NFT".to_string(),
+            symbol: "HDX".to_string(),
             icon: Some(DATA_IMAGE_SVG_NEAR_ICON.to_string()),
             base_uri: Some(BASE_URI.to_string()),
             reference: None,
@@ -84,8 +84,8 @@ impl Contract {
 
         // Default to common token
         let token_metadata = TokenMetadata {
-            title: Some(String::from("HASHD0X reward")),
-            description: Some(String::from("HASHD0X reward description")),
+            title: Some(String::from("Hashdox Reward")),
+            description: Some(String::from("Hashdox Early Contributor Reward")),
             media: Some(media_url),
             media_hash: Some(media_hash),
             copies: Some(1u64),
