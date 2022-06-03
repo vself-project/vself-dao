@@ -80,7 +80,7 @@ impl Contract {
         
         // Media url and media hash
         let media_url: String = String::from("https://ipfs.io/ipfs/bafybeiaeqxby7j34wjmtymguntgi7y5pksaryw7wu6ade6gbbqhwykcoky");
-        let media_hash = Base64VecU8(env::sha256(media_url.as_bytes())); // TODO
+        let media_hash = Base64VecU8("bafybeiaeqxby7j34wjmtymguntgi7y5pksaryw7wu6ade6gbbqhwykcoky".as_bytes().to_vec());
 
         // Default to common token
         let token_metadata = TokenMetadata {
