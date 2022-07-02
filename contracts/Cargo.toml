@@ -5,9 +5,9 @@ authors = ["vSelf team <ie@vself.app>"]
 edition = "2021"
 
 [dev-dependencies]
-near-sdk = "4.0.0-pre.7"
-near-contract-standards = "4.0.0-pre.7"
-near-sdk-sim = "4.0.0-pre.6"
+near-sdk = "4.0.0"
+near-contract-standards = "4.0.0"
+#near-sdk-sim = "4.0.0"
 pow-contract = { path = "./pow"}
 
 [profile.release]
@@ -23,5 +23,6 @@ overflow-checks = true
 [workspace]
 members = [
     "pow",
-    "nft_reward"
+    "nft_reward",
+    "linkdrop"
 ]
