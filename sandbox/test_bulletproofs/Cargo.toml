@@ -1,0 +1,28 @@
+[package]
+name = "test_bulletproofs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# bulletproofs = { version = "2.0.0", features = ["std", "avx2_backend"]}
+curve25519-dalek = { version = "2", default-features = false, features = ["u64_backend", "nightly", "serde", "alloc"] }
+subtle = { version = "2", default-features = false }
+sha3 = { version = "0.8", default-features = false }
+digest = { version = "0.8", default-features = false }
+rand_core = { version = "0.5", default-features = false, features = ["alloc"] }
+rand = { version = "0.7", default-features = false, features =["std"] }
+byteorder = { version = "1", default-features = false }
+serde = { version = "1", default-features = false, features = ["alloc"] }
+serde_derive = { version = "1", default-features = false }
+thiserror = { version = "1", optional = true }
+merlin = { version = "2", default-features = false }
+clear_on_drop = { version = "0.2", default-features = false, features = ["nightly"] }
+failure = "0.1"
+
+[dependencies.bulletproofs]
+#path = "../bulletproofs"
+git = "https://github.com/lovesh/bulletproofs"
+branch = "smt"
+features = ["std", "avx2_backend", "yoloproofs"]
