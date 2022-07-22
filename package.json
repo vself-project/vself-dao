@@ -16,6 +16,8 @@
     "nft_reward:build": "node contracts/nft_reward/compile.js",
     "nft_reward:dev:build_and_deploy": "yarn nft_reward:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/nft_reward_contract.wasm && env-cmd -f ./neardev/dev-account.env node contracts/nft_reward/init.js",
     "nft_reward:deploy:testnet": "env-cmd -f ./config/testnet-account.env node contracts/nft_reward/deploy.testnet.js",
+    "events:build": "node contracts/events/compile.js",
+    "events:dev:deploy": "yarn events:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/linkdrop.wasm && env-cmd -f ./neardev/dev-account.env node contracts/events/init.js",
     "linkdrop:build": "node contracts/linkdrop/compile.js",
     "linkdrop:dev:deploy": "yarn linkdrop:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/linkdrop.wasm && env-cmd -f ./neardev/dev-account.env node contracts/linkdrop/init.js",
     "linkdrop:deploy:testnet": "env-cmd -f ./config/testnet-account.env node contracts/linkdrop/deploy.testnet.js"
