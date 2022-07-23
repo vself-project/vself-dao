@@ -3,9 +3,10 @@
 // makes it easy to use *NIX-style scripting (which works on Linux distros,
 // macOS, and Unix systems) on Windows as well.
 const sh = require("shelljs");
+const fs = require('fs');
 
 const contractName =
-  process.env.POW_CONTRACT ||
+  process.env.LINKDROP_CONTRACT ||
   fs.readFileSync("./neardev/dev-account").toString();
 const initCmd = `near call ${contractName} new --accountId ${contractName}`;
 

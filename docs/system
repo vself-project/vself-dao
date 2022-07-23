@@ -1,0 +1,69 @@
+workspace {
+
+    model {
+        user = person "User" "A user of vSelf software system."
+        
+        near = softwareSystem "NEAR Blockchain"
+        filecoin = softwareSystem "Filecoin Blockchain"
+        
+        vself = softwareSystem "vSelf Software" "My software system." {
+            mobileApp = container "Mobile Application"
+            webApp = container "Web Application" "Allows employees to view and manage information regarding the veterinarians, the clients, and their pets." "Java and Spring Boot"
+            vselfApp = container "vSelf API Service"
+            database = container "Database" "Stores information regarding the veterinarians, the clients, and their pets." "Graph database GunBD" "Database"
+            storage = container "Storage" "Storage Service" "Stores large data files" "Database"
+            contracts = container "vSelf smart-contracts"
+            indexer = container "Indexer"
+        }
+        
+        webApp -> vselfApp "Uses API" "HTTPS"
+        mobileApp -> vselfApp "Uses API" "HTTPS"
+        webApp -> database "Reads from and writes to" "WebRTC"
+        vselfApp -> contracts "Uses" "near-js-sdk"
+        webApp -> storage "Writes to" 
+        mobileApp -> storage "Writes to"
+        storage -> filecoin "Writes to"
+        contracts -> near "Executed on"
+        indexer -> near "Read from"
+        indexer -> database "Writes to"
+        
+        user -> webApp "Interacts with"
+        user -> mobileApp "Interacts with"
+
+        user -> near "Uses"
+        user -> filecoin "Uses"
+        user -> vself "Uses"
+        vself -> near "Uses"
+        vself -> filecoin "Uses"
+    }
+
+    views {
+        systemContext vself "SystemContext" {
+            include *
+            autoLayout
+        }
+        
+        container vself {
+            include *
+            autolayout lr
+        }
+
+        styles {
+            element "Software System" {
+                background #1168bd
+                color #ffffff
+            }
+            
+            element "Person" {
+                shape person
+                background #08427b
+                color #ffffff
+            }
+            
+            element "Database" {
+                shape cylinder
+            }
+        }
+    }
+    
+}
