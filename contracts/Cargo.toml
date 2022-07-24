@@ -24,5 +24,6 @@ overflow-checks = true
 members = [
     "pow",
     "nft_reward",
-    "linkdrop"
+    "linkdrop",
+    "events"
 ]
