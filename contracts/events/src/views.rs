@@ -18,10 +18,14 @@ impl Contract {
     }
 
     /// Get all ongoing events (with pagination)
-    pub fn get_ongoing_events(&self, from_index: u64, limit: u64) -> Vec<u32> {        
+    pub fn get_ongoing_events(&self, from_index: u64, limit: u64) -> Vec<(u32, EventData, EventStats)> {
         let keys = self.ongoing_events.keys_as_vector();
         (from_index..std::cmp::min(from_index + limit, self.ongoing_events.len()))
-        .map(|index| (keys.get(index).unwrap()))
+        .map(|index| {
+            let event_id = keys.get(index).unwrap();
+            let event = self.ongoing_events.get(&event_id).unwrap();
+            (event_id, event.data, event.stats)
+        })
         .collect()
     }
 
@@ -30,7 +34,6 @@ impl Contract {
         self.ongoing.get(&account_id).unwrap_or(HashSet::new())
     }
     
-
     /// Return event data
     pub fn get_event_data(self, event_id: u32) -> Option<EventData> {        
         let data = self.ongoing_events.get(&event_id);
