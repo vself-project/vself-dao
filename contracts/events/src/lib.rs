@@ -291,54 +291,50 @@ impl Contract {
         actions.push(&action_data);
         stats.total_actions += 1;
 
-        // Update event stats
-        event.stats = stats;
-
         // Update contract state
-        self.actions.insert(&event_id, &actions);
-        self.ongoing_events.insert(&event_id, &event);                
+        self.actions.insert(&event_id, &actions);                
 
-        // TO DO
         // Check if we've been awarded a reward
-        // if let Some(quest) = quests.get(reward_index) {  
-        //     // Update state if we are lucky          
-        //     stats.total_rewards += 1;
-        //     self.stats = Some(stats);
+        if let Some(quest) = quests.get(reward_index) {  
+            // Update state if we are lucky          
+            stats.total_rewards += 1;
+            event.stats = stats;
 
-        //     // Update user balance
-        //     let mut balance = self.balances.get(&user_account_id).expect("ERR_NOT_REGISTERED");
-        //     balance.karma_balance += 1; // Number of successfull actions
+            // Update user balance
+            let mut balance = self.balances.get(&event_id).unwrap().get(&user_account_id).expect("ERR_NOT_REGISTERED");
+            balance.karma_balance += 1; // Number of successfull actions
 
-        //     // Do we have this reward already            
-        //     if balance.quests_status[reward_index] { // Yes
-        //         self.balances.insert(&user_account_id, &balance);
-        //         return Some(ActionResult {
-        //             index: reward_index,
-        //             got: true,
-        //             title: quest.reward_title.clone(),
-        //             description: quest.reward_description.clone(),
-        //         });                
-        //     } else { // No
-        //         balance.quests_status[reward_index] = true;
-        //         self.balances.insert(&user_account_id, &balance);
+            // Do we have this reward already            
+            if balance.quests_status[reward_index] { // Yes
+                self.ongoing_events.insert(&event_id, &event);
+                //self.balances.insert(&user_account_id, &balance);
+                return Some(ActionResult {
+                    index: reward_index,
+                    got: true,
+                    title: quest.reward_title.clone(),
+                    description: quest.reward_description.clone(),
+                });                
+            } else { // No
+                balance.quests_status[reward_index] = true;
+                self.balances.get(&event_id).unwrap().insert(&user_account_id, &balance);
 
-        //         // NFT Part (issue token)
-        //         //self.issue_nft_reward(user_account_id.clone(), reward_index.clone());                  
+                // NFT Part (issue token)
+                self.issue_nft_reward(user_account_id.clone(), event_id.clone(), reward_index.clone());                  
 
-        //         return Some(ActionResult {
-        //             index: reward_index,
-        //             got: false,
-        //             title: quest.reward_title.clone(),
-        //             description: quest.reward_description.clone(),
-        //         });
-        //     }                                     
-        // } else {
-        //     // Update state if we are not
-        //     self.stats = Some(stats);       
-        //     log!("No reward for this checkin! User: {}", username);
-        //     return None;            
-        // }
-
-        None
+                self.ongoing_events.insert(&event_id, &event);
+                return Some(ActionResult {
+                    index: reward_index,
+                    got: false,
+                    title: quest.reward_title.clone(),
+                    description: quest.reward_description.clone(),
+                });
+            }                                     
+        } else {
+            // Update stats
+            event.stats = stats;   
+            log!("No reward for this checkin! User: {}", username);
+            self.ongoing_events.insert(&event_id, &event);
+            None
+        }
     }
 }
