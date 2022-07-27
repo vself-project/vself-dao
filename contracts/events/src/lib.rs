@@ -7,7 +7,7 @@ use near_sdk::serde_json::json;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, log, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
-use near_sdk::collections::{ LookupMap, LazyOption, Vector, UnorderedSet, UnorderedMap };
+use near_sdk::collections::{ LookupMap, LazyOption, Vector, UnorderedMap };
 use std::collections::HashSet;
 
 mod constants;
@@ -17,6 +17,7 @@ pub mod nft;
 use near_sdk::ONE_YOCTO;
 use constants::SINGLE_CALL_GAS;
 
+/// It's used to compute event id (start_event function)
 fn read_be_u32(input: &mut &[u8]) -> u32 {
     let (int_bytes, rest) = input.split_at(std::mem::size_of::<u32>());
     *input = rest;
@@ -35,7 +36,7 @@ pub struct QuestData {
     pub reward_uri: String,
 }
 
-// Current event data
+/// Current event data
 #[derive(Clone)]
 #[derive(Debug)]
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
@@ -48,7 +49,7 @@ pub struct EventData {
     quests: Vec<QuestData>,
 }
 
-// Current event data
+/// Current event data
 #[derive(Clone)]
 #[derive(Debug)]
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
@@ -242,7 +243,7 @@ impl Contract {
     pub fn checkin(&mut self, event_id: u32, username: String, request: String) -> Option<ActionResult> {
         // Assert event is active
         assert!( self.ongoing_events.get(&event_id).is_some(), "No event with this id is running" );
-        let timestamp: u64 = env::block_timestamp();        
+        let timestamp: u64 = env::block_timestamp();
 
         // Check if account seems valid
         assert!( AccountId::try_from(username.clone()).is_ok(), "Valid account is required" );
@@ -276,7 +277,7 @@ impl Contract {
 
         // Check if we have a new user
         if stats.participants.insert(user_account_id.clone()) {
-            stats.total_users += 1;           
+            stats.total_users += 1;
             
             // Initial balance
             self.balances.get(&event_id).unwrap().insert(&user_account_id, &UserBalance {
