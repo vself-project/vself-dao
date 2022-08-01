@@ -57,6 +57,7 @@ if (sh.exec(startEventCmd).code === 0) {
 // Some tests
 const eventId = 3090415815; //u32 for now
 sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
+sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "${contractName}"}' --accountId ${contractName}`);
 sh.exec(`near view ${contractName} get_event_data '{"event_id": ${eventId}}'`);
 sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
 sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);

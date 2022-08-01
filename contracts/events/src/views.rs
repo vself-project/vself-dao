@@ -30,8 +30,14 @@ impl Contract {
     }
 
     /// Get ongoing events for specific user
-    pub fn get_ongoing_user_events(&self, account_id: AccountId) -> HashSet<u32> {
-        self.ongoing.get(&account_id).unwrap_or(HashSet::new())
+    pub fn get_ongoing_user_events(&self, account_id: AccountId) -> Vec<(u32, EventData, EventStats)> {
+        let ids = self.ongoing.get(&account_id).unwrap_or(HashSet::new());
+        let mut user_events = vec![];
+        for id in ids {
+            let event = self.ongoing_events.get(&id).unwrap();
+            user_events.push((id, event.data, event.stats));
+        }
+        user_events
     }
     
     /// Return event data
