@@ -7,7 +7,7 @@ use near_sdk::serde_json::json;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, log, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
-use near_sdk::collections::{ LookupMap, LazyOption, Vector, UnorderedMap };
+use near_sdk::collections::{ LookupMap, LazyOption, Vector, UnorderedSet, UnorderedMap };
 use std::collections::HashSet;
 
 mod constants;
@@ -104,20 +104,19 @@ pub struct Event {
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
-    ongoing: LookupMap<AccountId, HashSet<u32>>, // List of ongoing events by owner account
-    ongoing_events: UnorderedMap<u32, Event>, // Ongoing events data and stats
+    authors: UnorderedSet<AccountId>, // Approved list of authors
+    public_events: UnorderedSet<u32>, // List of public events (premoderated)
+    ongoing_events: LookupMap<AccountId, HashSet<u32>>, // List of ongoing events by owner account
+    events: UnorderedMap<u32, Event>, // All events data and stats
 
     // NFT implementation
     tokens: NonFungibleToken,
     metadata: LazyOption<NFTContractMetadata>,
     
-    // Event statistics and history   
+    // Event statistics and history (event_id -> actions)
     actions: LookupMap<u32, Vector<ActionData>>, // History of all user actions
-    // Balance sheet for each user
+    // Balance sheet for each user (event_id -> account_id -> balance)
     balances: LookupMap<u32, LookupMap<AccountId, UserBalance>>,
-
-    // Past events archive
-    past_events: LookupMap<u32, (EventData, EventStats)>,
 }
 
 #[derive(BorshSerialize, BorshStorageKey)]
@@ -126,14 +125,16 @@ enum StorageKey {
     BalancesRoot,
     Actions { event_id: u32 },
     Balances { event_id: u32 },
-    PastEvents,
+    Authors,
+    PublicEvents,
+    Events,
+    Ongoing,
     NonFungibleToken,
     Metadata,
     TokenMetadata,
     Enumeration,
     Approval,
-    Ongoing,
-    OngoingEvents,
+        
 }
 
 // Contract NFT metadata
@@ -148,10 +149,11 @@ impl Contract {
     pub fn new() -> Self {        
         assert!(!env::state_exists(), "Already initialized");
 
+        // Common metadata for all minted SBT
         let metadata = NFTContractMetadata {
             spec: NFT_METADATA_SPEC.to_string(),
-            name: "vSelf Metabuild Event Quest".to_string(),
-            symbol: "VSLF".to_string(),
+            name: "vSelf Events SBTs".to_string(),
+            symbol: "VSELF".to_string(),
             icon: Some(DATA_IMAGE_SVG_NEAR_ICON.to_string()),
             base_uri: Some(BASE_URI.to_string()),
             reference: None,
@@ -161,11 +163,12 @@ impl Contract {
 
         // Init
         Self {
-            ongoing: LookupMap::new(StorageKey::Ongoing),
-            ongoing_events: UnorderedMap::new(StorageKey::OngoingEvents),            
+            authors: UnorderedSet::new(StorageKey::Authors), // Approved list of authors
+            public_events: UnorderedSet::new(StorageKey::PublicEvents), // List of public events (premoderated)                        
+            ongoing_events: LookupMap::new(StorageKey::Ongoing),
+            events: UnorderedMap::new(StorageKey::Events),
             actions: LookupMap::new(StorageKey::ActionsRoot),
             balances: LookupMap::new(StorageKey::BalancesRoot),
-            past_events: LookupMap::new(StorageKey::PastEvents),
             tokens: NonFungibleToken::new(
                 StorageKey::NonFungibleToken,
                 env::predecessor_account_id(),
@@ -208,12 +211,15 @@ impl Contract {
         };
 
         // Update index by user
-        let mut user_events = self.ongoing.get(&user_id).unwrap_or(HashSet::new());
+        let mut user_events = self.ongoing_events.get(&user_id).unwrap_or(HashSet::new());
         user_events.insert(nonce);
-        self.ongoing.insert(&user_id, &user_events);
+        self.ongoing_events.insert(&user_id, &user_events);
+
+        // Update public events set // TO DO check author
+        self.public_events.insert(&nonce);
         
         // Add event to the list
-        self.ongoing_events.insert(&nonce, &event);
+        self.events.insert(&nonce, &event);
         log!("Successfully strated by {} an event with id {}", user_id, nonce);
 
         nonce // return event_id = nonce
@@ -221,37 +227,38 @@ impl Contract {
 
     /// Stop and put event to archive (only for an owner of event)
     #[payable]
-    pub fn stop_event(&mut self) {
-        // TO DO
-        // let mut balance = self.balances.get(&user_account_id).expect("ERR_NOT_REGISTERED");
-        // assert!( self.event.is_some() );
-        // assert!( self.is_admin(&env::predecessor_account_id()) );
-        // let timestamp: u64 = env::block_timestamp();        
+    pub fn stop_event(&mut self, event_id: u32) {
+        // asserts and checks TO DO
+        let user_id = env::predecessor_account_id();
+        let timestamp: u64 = env::block_timestamp();
 
-        // let mut final_stats = self.stats.as_ref().unwrap().clone(); 
-        // final_stats.finish_time = Some(timestamp);
-        // let final_event_data = self.event.as_ref().unwrap().clone();        
+        // Remove from public events set
+        self.public_events.remove(&event_id);
 
-        // self.past_events.push(&(final_event_data, final_stats));
-        // self.event_id += 1;        
+        // Remove from user ongoing events
+        let mut user_events = self.ongoing_events.get(&user_id).unwrap();
+        user_events.remove(&event_id);
+        self.ongoing_events.insert(&user_id, &user_events);
 
-        // self.event = None;
-        // self.stats = None;
+        // Fix actual finish time
+        let mut event = self.events.get(&event_id).unwrap();
+        event.stats.finish_time = Some(timestamp);
+        self.events.insert(&event_id, &event);
     }
 
     #[payable]
     pub fn checkin(&mut self, event_id: u32, username: String, request: String) -> Option<ActionResult> {
-        // Assert event is active
-        assert!( self.ongoing_events.get(&event_id).is_some(), "No event with this id is running" );
+        // Assert event is active        
         let timestamp: u64 = env::block_timestamp();
+        let mut event = self.events.get(&event_id).unwrap();
+        assert!( event.data.finish_time > timestamp, "No event with this id is running" );
 
         // Check if account seems valid
         assert!( AccountId::try_from(username.clone()).is_ok(), "Valid account is required" );
         let user_account_id = AccountId::try_from(username.clone()).unwrap();
                         
         // Match QR code to quest
-        let qr_string = request.clone();
-        let mut event = self.ongoing_events.get(&event_id).unwrap();
+        let qr_string = request.clone();        
         let quests = event.data.quests.clone();
         let mut reward_index = 0;
         for quest in &quests {
@@ -304,10 +311,15 @@ impl Contract {
             let mut balance = self.balances.get(&event_id).unwrap().get(&user_account_id).expect("ERR_NOT_REGISTERED");
             balance.karma_balance += 1; // Number of successfull actions
 
+            // If karma is full issue uber NFT TO DO
+            //if balance.karma_balance == quests.len() {
+                // self.issue_nft_reward(user_account_id.clone(), event_id.clone(), reward_index.clone());
+            //}
+
             // Do we have this reward already            
-            if balance.quests_status[reward_index] { // Yes
-                self.ongoing_events.insert(&event_id, &event);
-                //self.balances.insert(&user_account_id, &balance);
+            if balance.quests_status[reward_index] { // Yes (no reward then)
+                self.events.insert(&event_id, &event);
+                
                 return Some(ActionResult {
                     index: reward_index,
                     got: true,
@@ -319,9 +331,9 @@ impl Contract {
                 self.balances.get(&event_id).unwrap().insert(&user_account_id, &balance);
 
                 // NFT Part (issue token)
-                self.issue_nft_reward(user_account_id.clone(), event_id.clone(), reward_index.clone());                  
+                self.issue_nft_reward(user_account_id.clone(), event_id.clone(), reward_index.clone());
 
-                self.ongoing_events.insert(&event_id, &event);
+                self.events.insert(&event_id, &event);
                 return Some(ActionResult {
                     index: reward_index,
                     got: false,
@@ -333,7 +345,7 @@ impl Contract {
             // Update stats
             event.stats = stats;   
             log!("No reward for this checkin! User: {}", username);
-            self.ongoing_events.insert(&event_id, &event);
+            self.events.insert(&event_id, &event);
             None
         }
     }

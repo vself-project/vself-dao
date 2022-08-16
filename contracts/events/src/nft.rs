@@ -25,6 +25,7 @@ impl Contract {
         receiver_id: AccountId,
         token_metadata: TokenMetadata,
     ) -> Token {
+        assert_eq!(env::predecessor_account_id(), self.tokens.owner_id, "Unauthorized");
         self.tokens.internal_mint(token_id, receiver_id, Some(token_metadata))
     }
 
@@ -35,7 +36,7 @@ impl Contract {
         let contract_id = env::current_account_id();
         let timestamp: u64 = env::block_timestamp();
 
-        let event = self.ongoing_events.get(&event_id).unwrap();
+        let event = self.events.get(&event_id).unwrap();
         let quests = event.data.quests.clone();
         let quest = quests.get(reward_index).unwrap();
         let rand: u8 = *env::random_seed().get(0).unwrap();                                                                     
@@ -61,29 +62,28 @@ impl Contract {
         // Mint achievement reward                                
         let root_id = AccountId::try_from(contract_id).unwrap();
 
-        self.nft_mint(token_id_with_timestamp.clone(), root_id.clone(), token_metadata.clone());
+        self.nft_mint(token_id_with_timestamp.clone(), receiver_id.clone(), token_metadata.clone());
         log!("Success! Minting NFT for {}! TokenID = {}", root_id.clone(), token_id_with_timestamp.clone());
 
         // Transfer NFT to new owner
-        env::promise_create(
-            root_id.clone(),
-            "nft_transfer",
-            json!({
-                "token_id": token_id_with_timestamp,
-                "receiver_id": receiver_id,
-            })
-            .to_string()
-            .as_bytes(),
-            ONE_YOCTO,
-            SINGLE_CALL_GAS,
-        );
-        log!("Success! Transfering NFT for {} from {}", receiver_id.clone(), root_id.clone());
+        // env::promise_create(
+        //     root_id.clone(),
+        //     "nft_transfer",
+        //     json!({
+        //         "token_id": token_id_with_timestamp,
+        //         "receiver_id": receiver_id,
+        //     })
+        //     .to_string()
+        //     .as_bytes(),
+        //     ONE_YOCTO,
+        //     SINGLE_CALL_GAS,
+        // );
+        // log!("Success! Transfering NFT for {} from {}", receiver_id.clone(), root_id.clone());
     }
 }
 
 // Implement NFT standart
 near_contract_standards::impl_non_fungible_token_core!(Contract, tokens);
-near_contract_standards::impl_non_fungible_token_approval!(Contract, tokens);
 near_contract_standards::impl_non_fungible_token_enumeration!(Contract, tokens);
 
 #[near_bindgen]
