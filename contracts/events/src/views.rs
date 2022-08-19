@@ -19,14 +19,19 @@ impl Contract {
 
     /// Get all ongoing events (with pagination)
     pub fn get_ongoing_events(&self, from_index: u64, limit: u64) -> Vec<(u32, EventData, EventStats)> {
-        let ids = self.public_events.as_vector();
-        (from_index..std::cmp::min(from_index + limit, ids.len()))
-        .map(|index| {
+        let timestamp: u64 = env::block_timestamp();
+        let mut ids = self.public_events.as_vector();
+        let mut index = from_index;
+        let mut result = vec![];
+        while index < ids.len() && result.len() < limit.try_into().unwrap() {
             let event_id = ids.get(index).unwrap();
             let event = self.events.get(&event_id).unwrap();
-            (event_id, event.data, event.stats)
-        })
-        .collect()
+            if timestamp < event.data.finish_time {
+                result.push((event_id, event.data, event.stats));
+            }
+            index = index + 1;
+        }
+        result
     }
 
     /// Get ongoing events for specific user
