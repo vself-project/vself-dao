@@ -5,7 +5,7 @@ const DELETE_BEFORE_DEPLOY = process.env.DELETE_BEFORE_DEPLOY === "true";
 const CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY = process.env.CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY === "true";
 
 // Initial contract account balance
-let initialBalance = 21;
+let initialBalance = 23;
 
 // Recreate account
 if (DELETE_BEFORE_DEPLOY) {
@@ -29,7 +29,7 @@ if (DELETE_BEFORE_DEPLOY) {
 
 // Deploy contract
 sh.exec(
-  `near deploy --wasmFile contracts/target/wasm32-unknown-unknown/release/nft_reward_contract.wasm --accountId ${EVENTS_CONTRACT}`
+  `near deploy --wasmFile contracts/target/wasm32-unknown-unknown/release/events.wasm --accountId ${EVENTS_CONTRACT}`
 );
 sh.exec(`near call ${EVENTS_CONTRACT} new --accountId ${EVENTS_CONTRACT}`);
 
