@@ -49,23 +49,81 @@ const startEventCmd = `near call ${contractName} start_event '{"event_data": {
   }],
 "start_time": ${start_time}}}' --accountId ${contractName}`;
 
-// Execute the command
+const startEvent1 = `near call ${contractName} start_event '{"event_data": {
+  "event_description":
+  "Test event",
+  "event_name": "Test event 1",
+  "finish_time": ${end_time},
+  "quests": [{
+    "qr_prefix_enc": "${hash('hello')}",
+    "qr_prefix_len": ${"hello".length},
+    "reward_description": "Welcome to the test!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://us.123rf.com/450wm/oksanastepova/oksanastepova1805/oksanastepova180500047/102167642-hello-unique-hand-drawn-nursery-poster-with-lettering-in-scandinavian-style-vector-illustration-.jpg?ver=6"
+  },
+  {
+    "qr_prefix_enc": "${hash('goodbye')}",
+    "qr_prefix_len": ${"goodbye".length},
+    "reward_description": "Welcome to the test!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://www.wallquotes.com/sites/default/files/entr0054_01.jpg"
+  }],
+"start_time": ${start_time}}}' --accountId ${masterAccount}`;
+
+const startEvent2 = `near call ${contractName} start_event '{"event_data": {
+  "event_description":
+  "Test event",
+  "event_name": "Test event 2",
+  "finish_time": ${end_time},
+  "quests": [{
+    "qr_prefix_enc": "${hash('cat')}",
+    "qr_prefix_len": ${"cat".length},
+    "reward_description": "You discovered a cat!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://i.pinimg.com/736x/98/16/ee/9816ee545b0f22fed08d3e120fdd48d7--jungle-cat-a-tiger.jpg"
+  },
+  {
+    "qr_prefix_enc": "${hash('dog')}",
+    "qr_prefix_len": ${"dog".length},
+    "reward_description": "You discovered a dog!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://breed-assets.wisdompanel.com/dog/street-dog-india/Indian_Street_Dog_Color.png"
+  },
+  {
+    "qr_prefix_enc": "${hash('possum')}",
+    "qr_prefix_len": ${"possum".length},
+    "reward_description": "You discovered a possum!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://i.pinimg.com/550x/43/e2/26/43e226270cbc24c2fd7efeff710da7d1.jpg"
+  }],
+"start_time": ${start_time}}}' --accountId ${masterAccount}`;
+
+// Start all events
+// if (sh.exec(startEvent1).code === 0) {
+//   console.log("Test event 1 starts successfully");
+// }
+// if (sh.exec(startEvent2).code === 0) {
+//   console.log("Test event 2 starts successfully");
+// }
 if (sh.exec(startEventCmd).code === 0) {
   console.log("Start default event successfull");
 }
 
 // Some tests
 const eventId = 206241575; //u32 for now
+sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 //sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "jkahfkjashdfs.testnet"}' --accountId ${contractName}`);
 //sh.exec(`near view ${contractName} get_event_data '{"event_id": ${eventId}}'`);
 //sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId "sergantche.testnet" --depositYocto 9000000000000000000000 --gas 300000000000000`);
-sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${contractName} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
-sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
-sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId "sergantche.testnet" --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${contractName} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
+sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${contractName}`);
+sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
+// sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
+// sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
+// sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
 
 // exit script with the same code as the build command
 process.exit();
