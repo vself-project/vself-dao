@@ -117,10 +117,11 @@ sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit"
 //sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId "sergantche.testnet" --depositYocto 9000000000000000000000 --gas 300000000000000`);
-// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${contractName} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${contractName} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+//sh.exec(`near view ${contractName} nft_token '{"token_id": "206241575:1:1661000383816756395:211"}'`);
 // sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${contractName}`);
-sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
+// sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${contractName}`);
+// sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
 // sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
