@@ -137,6 +137,8 @@ const startFinishedEvent = `near call ${contractName} start_event '{"event_data"
 
 // Some tests
 const eventId = 206241575; //u32 for now
+const eventId1 = 3751826517;
+const eventId2 = 39656749;
 const finishedEventId = 3502483670;
 sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 //sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "jkahfkjashdfs.testnet"}' --accountId ${contractName}`);
