@@ -7,7 +7,7 @@ const hash = (msg) => {
   return createHash('sha256').update(msg).digest('hex');
 }
 
-const contractName = process.env.CONTRACT_NAME || fs.readFileSync('./neardev/dev-account').toString();
+const contractName = process.env.EVENTS_CONTRACT || fs.readFileSync('./neardev/dev-account').toString();
 const masterAccount = process.env.MASTER_ACCOUNT || fs.readFileSync('./neardev/dev-account').toString();
 
 // Start default event (time in 1 billionth of second)
@@ -50,23 +50,22 @@ const startEventCmd = `near call ${contractName} start_event '{"event_data": {
 "start_time": ${start_time}}}' --accountId ${contractName}`;
 
 // Execute the command
-// if (sh.exec(startEventCmd).code === 0) {
-//   console.log("Start default event successfull");
-// }
+if (sh.exec(startEventCmd).code === 0) {
+  console.log("Start default event successfull");
+}
 
 // Some tests
 const eventId = 206241575; //u32 for now
-//sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
-//sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "${contractName}"}' --accountId ${contractName}`);
+//sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "jkahfkjashdfs.testnet"}' --accountId ${contractName}`);
 //sh.exec(`near view ${contractName} get_event_data '{"event_id": ${eventId}}'`);
 //sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-//sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-//sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${"sergantche.testnet"} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-// sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-// sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
-// sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
-// sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
+sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId "sergantche.testnet" --depositYocto 9000000000000000000000 --gas 300000000000000`);
+sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${contractName} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
+sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
+sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
+sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
 
 // exit script with the same code as the build command
 process.exit();
