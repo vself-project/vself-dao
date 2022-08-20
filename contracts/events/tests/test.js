@@ -7,7 +7,7 @@ const hash = (msg) => {
   return createHash('sha256').update(msg).digest('hex');
 }
 
-const contractName = process.env.CONTRACT_NAME || fs.readFileSync('./neardev/dev-account').toString();
+const contractName = process.env.EVENTS_CONTRACT || fs.readFileSync('./neardev/dev-account').toString();
 const masterAccount = process.env.MASTER_ACCOUNT || fs.readFileSync('./neardev/dev-account').toString();
 
 // Start default event (time in 1 billionth of second)
