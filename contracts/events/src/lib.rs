@@ -220,7 +220,7 @@ impl Contract {
         
         // Add event to the list
         self.events.insert(&nonce, &event);
-        log!("Successfully strated by {} an event with id {}", user_id, nonce);
+        log!("Successfully started by {} an event with id {}", user_id, nonce);
 
         nonce // return event_id = nonce
     }
