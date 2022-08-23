@@ -7,12 +7,12 @@ const hash = (msg) => {
   return createHash('sha256').update(msg).digest('hex');
 }
 
-const contractName = process.env.CONTRACT_NAME || fs.readFileSync('./neardev/dev-account').toString();
+const contractName = process.env.EVENTS_CONTRACT || fs.readFileSync('./neardev/dev-account').toString();
 const masterAccount = process.env.MASTER_ACCOUNT || fs.readFileSync('./neardev/dev-account').toString();
 
 // Start default event
 const start_time = (new Date().getTime()) * 1000000; // 24.07
-const end_time = start_time + 30 * 24 * 60 * 60 * 1000000; // + month
+const end_time = start_time + 60 * 24 * 60 * 60 * 1000000; // + month
 
 const startEvent1 = `near call ${contractName} start_event '{"event_data": {
   "event_description":
@@ -72,8 +72,8 @@ if (sh.exec(startEvent2).code === 0) {
 }
 
 // Some tests
-// const event1_id = 319923400; //u32 for now
-// const event2_id = 3899876070; //u32 for now
+const event1_id = 1478179105; //u32 for now
+const event2_id = 924530320; //u32 for now
 // sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "${contractName}"}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_event_data '{"event_id": ${eventId}}'`);
