@@ -48,7 +48,7 @@ const startEventCmd = `near call ${contractName} start_event '{"event_data": {
     "reward_title": "vSelf: Metabuidl Badge",
     "reward_uri": "/nft4.png"
   }],
-"start_time": ${start_time}}}' --accountId ${contractName}`;
+"start_time": ${start_time}}}' --accountId ${masterAccount}`;
 
 const startEvent1 = `near call ${contractName} start_event '{"event_data": {
   "event_description":
@@ -153,9 +153,9 @@ sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit"
 // Try to call checkin in ongoing event
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId "sergantche.testnet" --depositYocto 9000000000000000000000 --gas 300000000000000`);
-// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${contractName} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
 // sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-// sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${contractName}`);
+// sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${masterAccount}`);
 // sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
