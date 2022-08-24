@@ -7,12 +7,13 @@ const hash = (msg) => {
   return createHash('sha256').update(msg).digest('hex');
 }
 
-const contractName = process.env.CONTRACT_NAME || fs.readFileSync('./neardev/dev-account').toString();
+const contractName = process.env.EVENTS_CONTRACT || fs.readFileSync('./neardev/dev-account').toString();
 const masterAccount = process.env.MASTER_ACCOUNT || fs.readFileSync('./neardev/dev-account').toString();
 
-// Start default event
-const start_time = 1658661284014000000; // 24.07
-const end_time = start_time + 30 * 24 * 60 * 60 * 1000000; // + month
+// Start default event (time in 1 billionth of second)
+const start_time = 1660867934000000000; // 19.08
+const end_time = start_time + 30 * 24 * 60 * 60 * 1000000000; // + month
+const pased_end_time = start_time + 60 * 1000000000; // + minute
 
 const startEventCmd = `near call ${contractName} start_event '{"event_data": {
   "event_description":
@@ -47,25 +48,124 @@ const startEventCmd = `near call ${contractName} start_event '{"event_data": {
     "reward_title": "vSelf: Metabuidl Badge",
     "reward_uri": "/nft4.png"
   }],
-"start_time": ${start_time}}}' --accountId ${contractName}`;
+"start_time": ${start_time}}}' --accountId ${masterAccount}`;
 
-// Execute the command
-if (sh.exec(startEventCmd).code === 0) {
-  console.log("Start default event successfull");
-}
+const startEvent1 = `near call ${contractName} start_event '{"event_data": {
+  "event_description":
+  "Test event",
+  "event_name": "Test event 1",
+  "finish_time": ${end_time},
+  "quests": [{
+    "qr_prefix_enc": "${hash('hello')}",
+    "qr_prefix_len": ${"hello".length},
+    "reward_description": "Welcome to the test!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://us.123rf.com/450wm/oksanastepova/oksanastepova1805/oksanastepova180500047/102167642-hello-unique-hand-drawn-nursery-poster-with-lettering-in-scandinavian-style-vector-illustration-.jpg?ver=6"
+  },
+  {
+    "qr_prefix_enc": "${hash('goodbye')}",
+    "qr_prefix_len": ${"goodbye".length},
+    "reward_description": "Welcome to the test!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://www.wallquotes.com/sites/default/files/entr0054_01.jpg"
+  }],
+"start_time": ${start_time}}}' --accountId ${masterAccount}`;
+
+const startEvent2 = `near call ${contractName} start_event '{"event_data": {
+  "event_description":
+  "Test event",
+  "event_name": "Test event 2",
+  "finish_time": ${end_time},
+  "quests": [{
+    "qr_prefix_enc": "${hash('cat')}",
+    "qr_prefix_len": ${"cat".length},
+    "reward_description": "You discovered a cat!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://i.pinimg.com/736x/98/16/ee/9816ee545b0f22fed08d3e120fdd48d7--jungle-cat-a-tiger.jpg"
+  },
+  {
+    "qr_prefix_enc": "${hash('dog')}",
+    "qr_prefix_len": ${"dog".length},
+    "reward_description": "You discovered a dog!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://breed-assets.wisdompanel.com/dog/street-dog-india/Indian_Street_Dog_Color.png"
+  },
+  {
+    "qr_prefix_enc": "${hash('possum')}",
+    "qr_prefix_len": ${"possum".length},
+    "reward_description": "You discovered a possum!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://i.pinimg.com/550x/43/e2/26/43e226270cbc24c2fd7efeff710da7d1.jpg"
+  }],
+"start_time": ${start_time}}}' --accountId ${masterAccount}`;
+
+const startFinishedEvent = `near call ${contractName} start_event '{"event_data": {
+  "event_description":
+  "Test finished event",
+  "event_name": "Test event",
+  "finish_time": ${pased_end_time},
+  "quests": [{
+    "qr_prefix_enc": "${hash('hello')}",
+    "qr_prefix_len": ${"hello".length},
+    "reward_description": "Welcome to the test!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://us.123rf.com/450wm/oksanastepova/oksanastepova1805/oksanastepova180500047/102167642-hello-unique-hand-drawn-nursery-poster-with-lettering-in-scandinavian-style-vector-illustration-.jpg?ver=6"
+  },
+  {
+    "qr_prefix_enc": "${hash('goodbye')}",
+    "qr_prefix_len": ${"goodbye".length},
+    "reward_description": "Welcome to the test!",
+    "reward_title": "vSelf: Tester Badge",
+    "reward_uri": "https://www.wallquotes.com/sites/default/files/entr0054_01.jpg"
+  }],
+"start_time": ${start_time}}}' --accountId ${masterAccount}`;
+
+
+// Start all events
+// if (sh.exec(startEvent1).code === 0) {
+//   console.log("Test event 1 starts successfully");
+// }
+// if (sh.exec(startEvent2).code === 0) {
+//   console.log("Test event 2 starts successfully");
+// }
+// if (sh.exec(startEventCmd).code === 0) {
+//   console.log("Start default event successfull");
+// }
+// if (sh.exec(startFinishedEvent).code === 0) {
+//   console.log("Start finished event successfull");
+// }
 
 // Some tests
-const eventId = 3090415815; //u32 for now
+const eventId = 206241575; //u32 for now
+const eventId1 = 3751826517;
+const eventId2 = 39656749;
+const finishedEventId = 3502483670;
 sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
-sh.exec(`near view ${contractName} get_event_data '{"event_id": ${eventId}}'`);
-sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
-sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
-sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
-sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
+//sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "jkahfkjashdfs.testnet"}' --accountId ${contractName}`);
+
+// Try to call checkin in finished event
+// sh.exec(`near view ${contractName} get_event_data '{"event_id": ${finishedEventId}}'`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${finishedEventId}, "username": "jkahfkjashdfs.testnet", "request": "hello" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${finishedEventId}, "username": "jkahfkjashdfs.testnet", "request": "goodbye" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${finishedEventId}}'`);
+// sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${finishedEventId}, "account_id": "jkahfkjashdfs.testnet"}'`);
+
+// Try to call checkin in ongoing event
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId "sergantche.testnet" --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
+// sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${masterAccount}`);
+// sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
+// sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
+// sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
+// sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
+
+// Check token status
+// sh.exec(`near view ${contractName} nft_token '{"token_id": "206241575:1:1661000383816756395:211"}'`);
+
+// Try to transfer the token
+// sh.exec(`near call events_v5.sergantche.testnet nft_transfer '{"receiver_id": "ilerik.testnet", "token_id": "206241575:1:1660998159049330033:11", "memo": "Go Team :)"}' --accountId sergantche.testnet --depositYocto 1`);
 
 // exit script with the same code as the build command
 process.exit();

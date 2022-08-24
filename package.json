@@ -19,6 +19,8 @@
     "events:build": "node contracts/events/compile.js",
     "events:dev:deploy": "yarn events:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/events.wasm && env-cmd -f ./neardev/dev-account.env node contracts/events/init.js",
     "events:test": "env-cmd -f ./config/testnet-account.env node contracts/events/tests/test.js",
+    "events:create": "env-cmd -f ./config/testnet-account.env node contracts/events/tests/start_events.js",
+    "events:deploy:testnet": "env-cmd -f ./config/testnet-account.env node contracts/events/deploy.testnet.js",
     "linkdrop:build": "node contracts/linkdrop/compile.js",
     "linkdrop:dev:deploy": "yarn linkdrop:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/linkdrop.wasm && env-cmd -f ./neardev/dev-account.env node contracts/linkdrop/init.js",
     "linkdrop:deploy:testnet": "env-cmd -f ./config/testnet-account.env node contracts/linkdrop/deploy.testnet.js"
