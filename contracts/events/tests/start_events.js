@@ -12,7 +12,7 @@ const masterAccount = process.env.MASTER_ACCOUNT || fs.readFileSync('./neardev/d
 
 // Start default event
 const start_time = (new Date().getTime()) * 1000000; // 24.07
-const end_time = start_time + 60 * 24 * 60 * 60 * 1000000; // + month
+const end_time = start_time + 60 * 24 * 60 * 60 * 1000000000; // + 2 month
 
 const startEvent1 = `near call ${contractName} start_event '{"event_data": {
   "event_description":
@@ -72,8 +72,8 @@ if (sh.exec(startEvent2).code === 0) {
 }
 
 // Some tests
-const event1_id = 1478179105; //u32 for now
-const event2_id = 924530320; //u32 for now
+const event1_id = 3742138452; //u32 for now
+const event2_id = 755591911; //u32 for now
 // sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "${contractName}"}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_event_data '{"event_id": ${eventId}}'`);
