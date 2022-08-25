@@ -1,5 +1,15 @@
 # vSelf DAO
 
+## Deployment status
+
+### Staging (Testnet)
+- [web application](https://testnet.vself.app)
+- [smart-contract](https://explorer.testnet.near.org/accounts/events_v15.sergantche.testnet) deployed to events_v15.sergantche.testnet
+
+### Production (Mainnet)
+- [web application](https://vself.app)
+- [smart-contract](https://explorer.near.org/accounts/v2.event.vself.near) deployed to v2.event.vself.near
+
 ## Synopsys
 
 vSelf project was formed around the idea of a libertarian future where people are happy to coexist not only with other humans but with other sentient beings (including AIs) and, of course, mother nature. We believe that the time has come to start building a reliable interface between person and cyberspace, which will allow us to trust our robotic counterparts. For example, to manage our personal data and facilitate other aspects of our social and economic life.
