@@ -3,7 +3,6 @@ use near_sdk::{ Gas, Balance };
 pub const BASE_URI: &str = "";
 
 // Prepaid gas for making a single simple call
-pub const SINGLE_CALL_GAS: Gas = Gas(200000000000000);
 pub const ONE_YOCTO: Balance = 1;
 
 // Converted with https://yoksel.github.io/url-encoder/

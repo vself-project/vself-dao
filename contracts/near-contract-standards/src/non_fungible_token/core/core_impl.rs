@@ -1,19 +1,15 @@
-use crate::non_fungible_token::core::NonFungibleTokenCore;
-use crate::non_fungible_token::events::{NftMint, NftTransfer};
+    use crate::non_fungible_token::core::NonFungibleTokenCore;
+use crate::non_fungible_token::events::{NftMint};
 use crate::non_fungible_token::metadata::TokenMetadata;
 use crate::non_fungible_token::token::{Token, TokenId};
-use crate::non_fungible_token::utils::{refund_approved_account_ids, refund_deposit_to_account};
+use crate::non_fungible_token::utils::{refund_deposit_to_account};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, TreeMap, UnorderedSet};
 use near_sdk::json_types::Base64VecU8;
 use near_sdk::{
-    assert_one_yocto, env, require, AccountId, BorshStorageKey, Gas, IntoStorageKey,
-    PromiseOrValue, PromiseResult, StorageUsage,
+    env, AccountId, BorshStorageKey, IntoStorageKey, StorageUsage,
 };
 use std::collections::HashMap;
-
-const GAS_FOR_RESOLVE_TRANSFER: Gas = Gas(5_000_000_000_000);
-const GAS_FOR_NFT_TRANSFER_CALL: Gas = Gas(25_000_000_000_000 + GAS_FOR_RESOLVE_TRANSFER.0);
 
 /// Implementation of the non-fungible token standard.
 /// Allows to include NEP-171 compatible token to any contract.

@@ -3,7 +3,6 @@ use near_contract_standards::non_fungible_token::metadata::{
   };
 use near_contract_standards::non_fungible_token::{NonFungibleToken};
 use near_sdk::json_types::Base64VecU8;
-use near_sdk::serde_json::json;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, log, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
@@ -13,9 +12,6 @@ use std::collections::HashSet;
 mod constants;
 pub mod views;
 pub mod nft;
-
-use near_sdk::ONE_YOCTO;
-use constants::SINGLE_CALL_GAS;
 
 /// It's used to compute event id (start_event function)
 fn read_be_u32(input: &mut &[u8]) -> u32 {

@@ -3,7 +3,7 @@ use near_contract_standards::non_fungible_token::metadata::{
   };
 use near_contract_standards::non_fungible_token::{Token, TokenId};
 use near_sdk::{
-    env, log, near_bindgen, AccountId, Promise, PromiseOrValue
+    env, log, near_bindgen, AccountId
 };
 
 use crate::*;
