@@ -1,11 +1,11 @@
 const sh = require("shelljs");
-const { NFT_REWARD_CONTRACT, MASTER_ACCOUNT, NFT_REWARD_DEPLOYMENT_COST, NFT_REWARD_CONSTRUCTOR_COST } = process.env;
+const { NFT_REWARD_CONTRACT, MASTER_ACCOUNT } = process.env;
 
 const DELETE_BEFORE_DEPLOY = process.env.DELETE_BEFORE_DEPLOY === "true";
 const CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY = process.env.CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY === "true";
 
 // Initial contract account balance
-let initialBalance = Number(NFT_REWARD_DEPLOYMENT_COST) + Number(NFT_REWARD_CONSTRUCTOR_COST);
+let initialBalance = 20.4;
 
 // Recreate account
 if (DELETE_BEFORE_DEPLOY) {

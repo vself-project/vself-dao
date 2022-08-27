@@ -1,7 +1,4 @@
-use near_sdk::Gas;
-
 // Prepaid gas for making a single simple call.
-pub const SINGLE_CALL_GAS: Gas = Gas(200000000000000);
 pub const BASE_URI: &str = ""; // TO DO IPFS
 
 // Converted with https://yoksel.github.io/url-encoder/

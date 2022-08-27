@@ -3,7 +3,6 @@ use near_contract_standards::non_fungible_token::metadata::{
   };
 use near_contract_standards::non_fungible_token::{NonFungibleToken};
 use near_sdk::json_types::Base64VecU8;
-use near_sdk::serde_json::json;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, log, near_bindgen, PanicOnDefault, AccountId, BorshStorageKey};
@@ -13,9 +12,6 @@ use std::collections::HashSet;
 mod constants;
 pub mod views;
 pub mod nft;
-
-use near_sdk::ONE_YOCTO;
-use constants::SINGLE_CALL_GAS;
 
 /// It's used to compute event id (start_event function)
 fn read_be_u32(input: &mut &[u8]) -> u32 {
@@ -56,8 +52,9 @@ pub struct EventData {
 #[serde(crate = "near_sdk::serde")]
 pub struct EventStats {               
     participants: HashSet<AccountId>, // Participants of current event
-    start_time: u64,
-    finish_time: Option<u64>,
+    created_by: AccountId,
+    created_at: u64,
+    stopped_at: Option<u64>,
     total_rewards: u64,
     total_users: u64,
     total_actions: u64,
@@ -183,17 +180,16 @@ impl Contract {
     /// Initiate next event 
     #[payable]
     pub fn start_event(&mut self, event_data: EventData) -> u32 {
-        // assert add checks TO DO
         let user_id = env::predecessor_account_id();
         let timestamp: u64 = env::block_timestamp();
         let hash: Vec<u8> = env::sha256(&event_data.try_to_vec().unwrap());
-        log!("{:?}", hash);
         let nonce: u32 = read_be_u32(&mut hash.as_slice());
 
         let initial_stats = EventStats {
             participants: HashSet::new(),
-            start_time: timestamp,
-            finish_time: None,
+            created_by: user_id.clone(),
+            created_at: timestamp,
+            stopped_at: None,
             total_rewards: 0,
             total_users: 0,
             total_actions: 0,
@@ -215,7 +211,7 @@ impl Contract {
         user_events.insert(nonce);
         self.ongoing_events.insert(&user_id, &user_events);
 
-        // Update public events set // TO DO check author
+        // Update public events set
         self.public_events.insert(&nonce);
         
         // Add event to the list
@@ -227,22 +223,22 @@ impl Contract {
 
     /// Stop and put event to archive (only for an owner of event)
     #[payable]
-    pub fn stop_event(&mut self, event_id: u32) {
-        // asserts and checks TO DO
+    pub fn stop_event(&mut self, event_id: u32) {        
         let user_id = env::predecessor_account_id();
         let timestamp: u64 = env::block_timestamp();
-
-        // Remove from public events set
-        self.public_events.remove(&event_id);
-
-        // Remove from user ongoing events
         let mut user_events = self.ongoing_events.get(&user_id).unwrap();
+        // assert it is up to us to stop event
+        assert!(user_events.get(&event_id.clone()).is_some()); 
+        // Remove from user ongoing events
         user_events.remove(&event_id);
         self.ongoing_events.insert(&user_id, &user_events);
 
+        // Remove from public events set
+        self.public_events.remove(&event_id);       
+
         // Fix actual finish time
         let mut event = self.events.get(&event_id).unwrap();
-        event.stats.finish_time = Some(timestamp);
+        event.stats.stopped_at = Some(timestamp);
         self.events.insert(&event_id, &event);
     }
 
@@ -310,11 +306,6 @@ impl Contract {
             // Update user balance
             let mut balance = self.balances.get(&event_id).unwrap().get(&user_account_id).expect("ERR_NOT_REGISTERED");
             balance.karma_balance += 1; // Number of successfull actions
-
-            // If karma is full issue uber NFT TO DO
-            //if balance.karma_balance == quests.len() {
-                // self.issue_nft_reward(user_account_id.clone(), event_id.clone(), reward_index.clone());
-            //}
 
             // Do we have this reward already            
             if balance.quests_status[reward_index] { // Yes (no reward then)

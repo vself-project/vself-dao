@@ -20,7 +20,7 @@ impl Contract {
     /// Get all ongoing events (with pagination)
     pub fn get_ongoing_events(&self, from_index: u64, limit: u64) -> Vec<(u32, EventData, EventStats)> {
         let timestamp: u64 = env::block_timestamp();
-        let mut ids = self.public_events.as_vector();
+        let ids = self.public_events.as_vector();
         let mut index = from_index;
         let mut result = vec![];
         while index < ids.len() && result.len() < limit.try_into().unwrap() {

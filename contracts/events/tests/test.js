@@ -122,12 +122,12 @@ const startFinishedEvent = `near call ${contractName} start_event '{"event_data"
 
 
 // Start all events
-// if (sh.exec(startEvent1).code === 0) {
-//   console.log("Test event 1 starts successfully");
-// }
-// if (sh.exec(startEvent2).code === 0) {
-//   console.log("Test event 2 starts successfully");
-// }
+if (sh.exec(startEvent1).code === 0) {
+  console.log("Test event 1 starts successfully");
+}
+if (sh.exec(startEvent2).code === 0) {
+  console.log("Test event 2 starts successfully");
+}
 // if (sh.exec(startEventCmd).code === 0) {
 //   console.log("Start default event successfull");
 // }
@@ -142,6 +142,10 @@ const eventId2 = 39656749;
 const finishedEventId = 3502483670;
 sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 //sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "jkahfkjashdfs.testnet"}' --accountId ${contractName}`);
+
+// Stop events tests
+//sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId1}}' --accountId ${contractName}`);  // should fail
+sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId1}}' --accountId ${masterAccount}`);  // should stop
 
 // Try to call checkin in finished event
 // sh.exec(`near view ${contractName} get_event_data '{"event_id": ${finishedEventId}}'`);
