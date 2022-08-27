@@ -4,11 +4,11 @@ Root of vSelf community.
 
 ## Deployment status
 
-For details of events smart-contract and deployment instructions please refer to [EVENTS.md].
+For details of events smart-contract and deployment instructions please refer to [Events](EVENTS.md).
 
 ### Staging (Testnet)
 - [web application](https://testnet.vself.app)
-- [smart-contract](https://explorer.testnet.near.org/accounts/events_v15.sergantche.testnet) deployed to events_v15.sergantche.testnet
+- [smart-contract](https://explorer.testnet.near.org/accounts/events_v22.sergantche.testnet) deployed to events_v22.sergantche.testnet
 
 ### Production (Mainnet)
 - [web application](https://vself.app)
