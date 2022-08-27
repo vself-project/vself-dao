@@ -3,7 +3,7 @@ use near_contract_standards::non_fungible_token::metadata::{
   };
 use near_contract_standards::non_fungible_token::{Token, TokenId};
 use near_sdk::{
-    env, log, near_bindgen, AccountId
+    near_bindgen, AccountId
 };
 
 use crate::*;
@@ -27,58 +27,6 @@ impl Contract {
     ) -> Token {
         //assert_eq!(env::predecessor_account_id(), self.tokens.owner_id, "Unauthorized");
         self.tokens.internal_mint(token_id, receiver_id, Some(token_metadata))
-    }
-
-    /// Issue reward token  TO DO restrict who can call this
-    #[payable]
-    pub fn issue_nft_reward(&mut self, receiver_id: AccountId, event_id: u32, reward_index: usize) {
-        // Decide what to transfer for the player
-        let contract_id = env::current_account_id();
-        let timestamp: u64 = env::block_timestamp();
-
-        let event = self.events.get(&event_id).unwrap();
-        let quests = event.data.quests.clone();
-        let quest = quests.get(reward_index).unwrap();
-        let rand: u8 = *env::random_seed().get(0).unwrap();                                                                     
-        let token_id_with_timestamp: String = format!("{}:{}:{}:{}", &event_id, &reward_index, &timestamp, rand);
-        let media_url: String = format!("{}", quest.reward_uri);
-        let media_hash = Base64VecU8(env::sha256(media_url.as_bytes()));
-
-        let token_metadata = TokenMetadata {
-            title: Some(quest.reward_title.clone()),
-            description: Some(quest.reward_description.clone()),
-            media: Some(media_url),
-            media_hash: Some(media_hash),
-            copies: Some(1u64),
-            issued_at: Some(timestamp.to_string()),
-            expires_at: None,
-            starts_at: None,
-            updated_at: None,
-            extra: None,
-            reference: None,
-            reference_hash: None,
-        };
-
-        // Mint achievement reward                                
-        let root_id = AccountId::try_from(contract_id).unwrap();
-
-        self.nft_mint(token_id_with_timestamp.clone(), receiver_id.clone(), token_metadata.clone());
-        log!("Success! Minting NFT for {}! TokenID = {}", root_id.clone(), token_id_with_timestamp.clone());
-
-        // Transfer NFT to new owner
-        // env::promise_create(
-        //     root_id.clone(),
-        //     "nft_transfer",
-        //     json!({
-        //         "token_id": token_id_with_timestamp,
-        //         "receiver_id": receiver_id,
-        //     })
-        //     .to_string()
-        //     .as_bytes(),
-        //     ONE_YOCTO,
-        //     SINGLE_CALL_GAS,
-        // );
-        // log!("Success! Transfering NFT for {} from {}", receiver_id.clone(), root_id.clone());
     }
 }
 

@@ -2,6 +2,6 @@ This section tries to provide complete model for our system architecture via DSL
 
 To render the model we use online tooling https://structurizr.com/dsl.
 
-![](structurizr-vSelfSoftware-Container.png)
+![](system.png)
 
-![](structurizr-vSelfSoftware-Container-key.png)
+![](legend.png)

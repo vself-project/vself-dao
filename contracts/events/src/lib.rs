@@ -1,6 +1,6 @@
 use near_contract_standards::non_fungible_token::metadata::{
-    NFTContractMetadata, NFT_METADATA_SPEC,
-  };
+    NFTContractMetadata, NFT_METADATA_SPEC, TokenMetadata
+};
 use near_contract_standards::non_fungible_token::{NonFungibleToken};
 use near_sdk::json_types::Base64VecU8;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
@@ -179,11 +179,12 @@ impl Contract {
     
     /// Initiate next event 
     #[payable]
-    pub fn start_event(&mut self, event_data: EventData) -> u32 {
+    pub fn start_event(&mut self, event_data: EventData) -> u32 {        
         let user_id = env::predecessor_account_id();
         let timestamp: u64 = env::block_timestamp();
         let hash: Vec<u8> = env::sha256(&event_data.try_to_vec().unwrap());
         let nonce: u32 = read_be_u32(&mut hash.as_slice());
+        assert!( self.events.get(&nonce).is_none( )); // assert event doesnt exist
 
         let initial_stats = EventStats {
             participants: HashSet::new(),
@@ -242,6 +243,43 @@ impl Contract {
         self.events.insert(&event_id, &event);
     }
 
+    /// Issue reward token
+    #[payable]
+    fn issue_nft_reward(&mut self, receiver_id: AccountId, event_id: u32, reward_index: usize) {
+        // Decide what to transfer for the player
+        let contract_id = env::current_account_id();
+        let timestamp: u64 = env::block_timestamp();
+
+        let event = self.events.get(&event_id).unwrap();
+        let quests = event.data.quests.clone();
+        let quest = quests.get(reward_index).unwrap();
+        let rand: u8 = *env::random_seed().get(0).unwrap();                                                                     
+        let token_id_with_timestamp: String = format!("{}:{}:{}:{}", &event_id, &reward_index, &timestamp, rand);
+        let media_url: String = format!("{}", quest.reward_uri);
+        let media_hash = Base64VecU8(env::sha256(media_url.as_bytes()));
+
+        let token_metadata = TokenMetadata {
+            title: Some(quest.reward_title.clone()),
+            description: Some(quest.reward_description.clone()),
+            media: Some(media_url),
+            media_hash: Some(media_hash),
+            copies: Some(1u64),
+            issued_at: Some(timestamp.to_string()),
+            expires_at: None,
+            starts_at: None,
+            updated_at: None,
+            extra: None,
+            reference: None,
+            reference_hash: None,
+        };
+
+        // Mint achievement reward                                
+        let root_id = AccountId::try_from(contract_id).unwrap();
+
+        self.nft_mint(token_id_with_timestamp.clone(), receiver_id.clone(), token_metadata.clone());
+        log!("Success! Minting NFT for {}! TokenID = {}", root_id.clone(), token_id_with_timestamp.clone());
+    }
+
     #[payable]
     pub fn checkin(&mut self, event_id: u32, username: String, request: String) -> Option<ActionResult> {
         // Assert event is active        
@@ -271,7 +309,7 @@ impl Contract {
             qr_string: qr_string.clone(),
             reward_index,
             timestamp,
-        };       
+        };
 
         log!("Action data: {:?}", action_data);
 

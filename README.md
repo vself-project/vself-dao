@@ -1,6 +1,10 @@
 # vSelf DAO
 
+Root of vSelf community.
+
 ## Deployment status
+
+For details of events smart-contract and deployment instructions please refer to [EVENTS.md].
 
 ### Staging (Testnet)
 - [web application](https://testnet.vself.app)
@@ -31,8 +35,6 @@ This is probably the most generic setup for any dApp. In the beginning operation
 
 The other important part which is our adherence to open standarts and guidlines developed by international community of experts. That's why we look closely at DID and VC data models, which we use and adapt for our specific use cases.
 
-[PIC]
-
 ## Blueprints
 
 As we have already discussed what vSelf might look like eventually, in this section we will present our specific tech choices for the first product we are going to deliver. There are several resons and premises we based our architecture and tech choices off, let's see some. As we progress with design at every stage we try to keep it simple and rely only on open source software.
@@ -55,15 +57,10 @@ Our codebase is stored on GitHub, and consists of the following:
 - vSelf tooling (CLI) + TS/JS SDK for application developers
 - vSelf progressiwe web application / identity wallet / API service (Next.js + tRPC)
 
-[Architecture](images/design.png)
+![](docs/system.png)
 
-## Core logic TBD
+![](docs/legend.png)
 
-Informational model of user owned data:
-Root keypair and NEAR account:
-
-## Data flow TBD
-
-## Use cases TBD
+## Use cases
 [Events](EVENTS.md)
-[Community](HQ.md)
+[Governance](HQ.md)
