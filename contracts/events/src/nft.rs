@@ -29,7 +29,7 @@ impl Contract {
         self.tokens.internal_mint(token_id, receiver_id, Some(token_metadata))
     }
 
-    /// Issue reward token
+    /// Issue reward token  TO DO restrict who can call this
     #[payable]
     pub fn issue_nft_reward(&mut self, receiver_id: AccountId, event_id: u32, reward_index: usize) {
         // Decide what to transfer for the player
