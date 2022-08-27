@@ -63,4 +63,5 @@ Our codebase is stored on GitHub, and consists of the following:
 
 ## Use cases
 [Events](EVENTS.md)
+
 [Governance](HQ.md)
