@@ -122,15 +122,15 @@ const startFinishedEvent = `near call ${contractName} start_event '{"event_data"
 
 
 // Start all events
-if (sh.exec(startEvent1).code === 0) {
-  console.log("Test event 1 starts successfully");
-}
-if (sh.exec(startEvent2).code === 0) {
-  console.log("Test event 2 starts successfully");
-}
-// if (sh.exec(startEventCmd).code === 0) {
-//   console.log("Start default event successfull");
+// if (sh.exec(startEvent1).code === 0) {
+//   console.log("Test event 1 starts successfully");
 // }
+// if (sh.exec(startEvent2).code === 0) {
+//   console.log("Test event 2 starts successfully");
+// }
+if (sh.exec(startEventCmd).code === 0) {
+  console.log("Start default event successfull");
+}
 // if (sh.exec(startFinishedEvent).code === 0) {
 //   console.log("Start finished event successfull");
 // }
@@ -145,7 +145,7 @@ sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit"
 
 // Stop events tests
 //sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId1}}' --accountId ${contractName}`);  // should fail
-sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId1}}' --accountId ${masterAccount}`);  // should stop
+//sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId1}}' --accountId ${masterAccount}`);  // should stop
 
 // Try to call checkin in finished event
 // sh.exec(`near view ${contractName} get_event_data '{"event_id": ${finishedEventId}}'`);
@@ -157,9 +157,11 @@ sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId1}}' --acco
 // Try to call checkin in ongoing event
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "Congrats! Now you know more about Web3" }' --accountId "sergantche.testnet" --depositYocto 9000000000000000000000 --gas 300000000000000`);
-// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+//sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "sergantche.testnet", "request": "You have registered in the NEAR community" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
 // sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-// sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${masterAccount}`);
+sh.exec(`near call ${contractName} stop_event '{"event_id": ${eventId}}' --accountId ${masterAccount}`);
+sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "ilerik.testnet", "request": "You have registered in the NEAR community" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);

@@ -226,7 +226,7 @@ impl Contract {
 
     /// Stop and put event to archive (only for an owner of event)
     #[payable]
-    pub fn stop_event(&mut self, event_id: u32) {
+    pub fn stop_event(&mut self, event_id: u32) -> bool {
         let user_id = env::predecessor_account_id();
         let timestamp: u64 = env::block_timestamp();
         let mut user_events = self.ongoing_events.get(&user_id).unwrap();
@@ -249,6 +249,7 @@ impl Contract {
             user_id,
             event_id
         );
+        true
     }
 
     /// Issue reward token
@@ -277,7 +278,7 @@ impl Contract {
             expires_at: None,
             starts_at: None,
             updated_at: None,
-            extra: Some("#hashtag".to_string()),
+            extra: Some("Test".to_string()),    // hashtags
             reference: None,
             reference_hash: None,
         };
