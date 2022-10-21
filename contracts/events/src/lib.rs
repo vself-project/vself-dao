@@ -175,7 +175,7 @@ impl Contract {
         // assert event doesnt exist
         assert!(
             self.events.get(&nonce).is_none(),
-            "Event with provided id doesn't exist"
+            "Event with provided already exists"
         );
 
         let initial_stats = EventStats {

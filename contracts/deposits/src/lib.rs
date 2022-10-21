@@ -2,7 +2,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap, UnorderedMap, UnorderedSet, Vector};
 use near_sdk::json_types::{Base64VecU8, U128};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{env, log, near_bindgen, AccountId, Balance, BorshStorageKey, PanicOnDefault};
+use near_sdk::{env, log, near_bindgen, AccountId, Balance, Promise, BorshStorageKey, PanicOnDefault};
 use std::collections::HashSet;
 
 pub mod views;
@@ -59,9 +59,7 @@ impl Contract {
     #[payable]
     pub fn make_deposit(&mut self, account_id: AccountId) {
         let amount: Balance = env::attached_deposit();
-        //let balance = self.internal_unwrap_balance_of(account_id.clone());
         let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
-        //let balance = self.get_deposit_amount(account_id.clone());
         if let Some(new_balance) = balance.checked_add(amount) {
             self.deposits.insert(&account_id, &new_balance);
             self.total_deposit = self
@@ -77,7 +75,6 @@ impl Contract {
     pub fn decrease_deposit(&mut self, account_id: AccountId, amount: Balance) {
         //assert_eq!(env::predecessor_account_id(), self.owner, "{}", ERR_CALLER_IS_NOT_OWNER);
         
-        //let balance = self.internal_unwrap_balance_of(account_id);
         let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
         if let Some(new_balance) = balance.checked_sub(amount) {
             self.deposits.insert(&account_id, &new_balance);
@@ -88,5 +85,35 @@ impl Contract {
         } else {
             env::panic_str(ERR_NOT_ENOUGH_BALANCE);
         }
+    }
+
+    /// If a caller has a positive deposit amount then set it to zero and transfer nears to the caller
+    pub fn withdrawal(&mut self) -> Balance {
+        let account_id = env::predecessor_account_id();
+        let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
+        // If balance is positive then make transfer
+        if (balance > 0) {
+          self.deposits.insert(&account_id, &0);
+          self.total_deposit = self
+            .total_deposit
+            .checked_sub(balance.clone())
+            .unwrap_or_else(|| env::panic_str(ERR_TOTAL_DEPOSIT_OVERFLOW));
+          Promise::new(account_id).transfer(balance.clone());
+        }
+        balance
+    }
+
+    /// Withdraw platform funds to the given address `account_id`
+    pub fn owner_withdrawal(&mut self, account_id: AccountId) -> Balance {
+        //assert_eq!(env::predecessor_account_id(), self.owner, "{}", ERR_CALLER_IS_NOT_OWNER);
+
+        let contract_balance: Balance = env::account_balance();
+        let amount_to_withdraw: Balance = contract_balance - self.total_deposit;
+
+        // Make a transfer to `account_id`
+        if (amount_to_withdraw > 0) {
+            Promise::new(account_id).transfer(amount_to_withdraw);
+        }
+        amount_to_withdraw
     }
 }

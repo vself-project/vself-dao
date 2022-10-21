@@ -11,7 +11,7 @@ const contractName = process.env.EVENTS_CONTRACT || fs.readFileSync('./neardev/d
 const masterAccount = process.env.MASTER_ACCOUNT || fs.readFileSync('./neardev/dev-account').toString();
 
 // Start default event (time in 1 billionth of second)
-const start_time = 1665132168000000000; // 07.10
+const start_time = 1665132268000000000; // 07.10
 const end_time = start_time + 30 * 24 * 60 * 60 * 1000000000; // + month
 const pased_end_time = start_time + 60 * 1000000000; // + minute
 
@@ -136,9 +136,9 @@ if (sh.exec(startEventCmd).code === 0) {
 // }
 
 // Some tests
-const eventId = 1887539744; //u32 for now
-const eventId1 = 3751826517;
-const eventId2 = 39656749;
+const eventId = 309661982; //u32 for now 91725767
+const eventId1 = 1887539744;
+const eventId2 = 906254051;
 const finishedEventId = 3502483670;
 sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_ongoing_user_events '{"account_id": "jkahfkjashdfs.testnet"}' --accountId ${contractName}`);
