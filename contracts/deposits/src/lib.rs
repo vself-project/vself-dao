@@ -72,15 +72,15 @@ impl Contract {
     }
 
     /// Decrease deposit amount of account `account_id` by `amount` value
-    pub fn decrease_deposit(&mut self, account_id: AccountId, amount: Balance) {
+    pub fn decrease_deposit(&mut self, account_id: AccountId, amount: U128) {
         //assert_eq!(env::predecessor_account_id(), self.owner, "{}", ERR_CALLER_IS_NOT_OWNER);
         
         let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
-        if let Some(new_balance) = balance.checked_sub(amount) {
+        if let Some(new_balance) = balance.checked_sub(amount.into()) {
             self.deposits.insert(&account_id, &new_balance);
             self.total_deposit = self
                 .total_deposit
-                .checked_sub(amount)
+                .checked_sub(amount.into())
                 .unwrap_or_else(|| env::panic_str(ERR_TOTAL_DEPOSIT_OVERFLOW));
         } else {
             env::panic_str(ERR_NOT_ENOUGH_BALANCE);
@@ -88,7 +88,7 @@ impl Contract {
     }
 
     /// If a caller has a positive deposit amount then set it to zero and transfer nears to the caller
-    pub fn withdrawal(&mut self) -> Balance {
+    pub fn withdraw(&mut self) -> Balance {
         let account_id = env::predecessor_account_id();
         let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
         // If balance is positive then make transfer
@@ -104,7 +104,7 @@ impl Contract {
     }
 
     /// Withdraw platform funds to the given address `account_id`
-    pub fn owner_withdrawal(&mut self, account_id: AccountId) -> Balance {
+    pub fn withdraw_to_owner(&mut self, account_id: AccountId) -> Balance {
         //assert_eq!(env::predecessor_account_id(), self.owner, "{}", ERR_CALLER_IS_NOT_OWNER);
 
         let contract_balance: Balance = env::account_balance();
