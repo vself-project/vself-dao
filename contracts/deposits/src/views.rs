@@ -16,4 +16,9 @@ impl Contract {
     pub fn get_total_deposit(&self) -> U128 {
         self.total_deposit.into()
     }
+
+    // Get balance of the owner
+    pub fn get_owner_balance(&self) -> U128 {
+        self.owner_balance.into()
+    }
 }

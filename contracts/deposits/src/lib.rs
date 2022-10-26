@@ -9,6 +9,7 @@ pub mod views;
 
 const ERR_TOTAL_DEPOSIT_OVERFLOW: &str = "Total deposit overflow";
 const ERR_BALANCE_OVERFLOW: &str = "Balance overflow";
+const ERR_OWNER_BALANCE_OVERFLOW: &str = "Owner balance overflow";
 const ERR_NOT_ENOUGH_BALANCE: &str = "The account doesn't have enough balance";
 const ERR_CALLER_IS_NOT_OWNER: &str = "Method call access denied";
 
@@ -26,6 +27,9 @@ pub struct Contract {
     /// Sum of all deposits
     pub total_deposit: Balance,
 
+    /// Funds available for owner to withdraw
+    pub owner_balance: Balance,
+
     /// Contract owner
     pub owner: AccountId,
 }
@@ -42,16 +46,8 @@ impl Contract {
         Self {
             deposits: LookupMap::new(StorageKey::Account),
             total_deposit: 0,
+            owner_balance: 0,
             owner: owner.into()
-        }
-    }
-
-    fn internal_unwrap_balance_of(&self, account_id: AccountId) -> Balance {
-        match self.deposits.get(&account_id) {
-            Some(balance) => balance,
-            None => {
-                env::panic_str(format!("The account {} is not registered", &account_id).as_str())
-            }
         }
     }
 
@@ -61,7 +57,10 @@ impl Contract {
         let amount: Balance = env::attached_deposit();
         let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
         if let Some(new_balance) = balance.checked_add(amount) {
+            // Update deposits collection
             self.deposits.insert(&account_id, &new_balance);
+
+            // Increase total deposit value
             self.total_deposit = self
                 .total_deposit
                 .checked_add(amount)
@@ -77,10 +76,19 @@ impl Contract {
         
         let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
         if let Some(new_balance) = balance.checked_sub(amount.into()) {
+            // Update deposits collection
             self.deposits.insert(&account_id, &new_balance);
+            
+            // Decrease total deposit value
             self.total_deposit = self
                 .total_deposit
                 .checked_sub(amount.into())
+                .unwrap_or_else(|| env::panic_str(ERR_TOTAL_DEPOSIT_OVERFLOW));
+
+            // Increase owner balance
+            self.owner_balance = self
+                .owner_balance
+                .checked_add(amount.into())
                 .unwrap_or_else(|| env::panic_str(ERR_TOTAL_DEPOSIT_OVERFLOW));
         } else {
             env::panic_str(ERR_NOT_ENOUGH_BALANCE);
@@ -91,6 +99,7 @@ impl Contract {
     pub fn withdraw(&mut self) -> Balance {
         let account_id = env::predecessor_account_id();
         let balance: Balance = self.deposits.get(&account_id).unwrap_or(0).into();
+
         // If balance is positive then make transfer
         if (balance > 0) {
           self.deposits.insert(&account_id, &0);
@@ -107,8 +116,8 @@ impl Contract {
     pub fn withdraw_to_owner(&mut self, account_id: AccountId) -> Balance {
         //assert_eq!(env::predecessor_account_id(), self.owner, "{}", ERR_CALLER_IS_NOT_OWNER);
 
-        let contract_balance: Balance = env::account_balance();
-        let amount_to_withdraw: Balance = contract_balance - self.total_deposit;
+        //let contract_balance: Balance = env::account_balance();
+        let amount_to_withdraw: Balance = self.owner_balance;
 
         // Make a transfer to `account_id`
         if (amount_to_withdraw > 0) {

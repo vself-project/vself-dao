@@ -9,13 +9,14 @@ sh.exec(`near view ${contractName} get_deposit_amount '{"account_id": "${contrac
 sh.exec(`near view ${contractName} get_deposit_amount '{"account_id": "${masterAccount}"}' --accountId ${masterAccount}`);
 sh.exec(`near view ${contractName} get_total_deposit '{}' --accountId ${masterAccount}`);
 //sh.exec(`near call ${contractName} make_deposit '{"account_id": "${masterAccount}"}' --accountId ${masterAccount} --depositYocto 1 --gas 300000000000000`);
-//sh.exec(`near call ${contractName} make_deposit '{"account_id": "${masterAccount}"}' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`);
-//sh.exec(`near call ${contractName} decrease_deposit '{"account_id": "${masterAccount}", "amount": "10000000000000000000000"}' --accountId ${masterAccount}`);
+//sh.exec(`near call ${contractName} make_deposit '{"account_id": "${masterAccount}"}' --accountId ${masterAccount} --depositYocto 20000000000000000000000 --gas 300000000000000`);
+//sh.exec(`near call ${contractName} decrease_deposit '{"account_id": "${masterAccount}", "amount": "20000000000000000000000"}' --accountId ${masterAccount}`);
 //sh.exec(`near call ${contractName} make_deposit '{"account_id": "${masterAccount}"}' --accountId ${masterAccount} --depositYocto 1 --gas 300000000000000`);
 //sh.exec(`near view ${contractName} get_deposit_amount '{"account_id": "${contractName}"}' --accountId ${masterAccount}`);
 //sh.exec(`near view ${contractName} get_deposit_amount '{"account_id": "${masterAccount}"}' --accountId ${masterAccount}`);
 //sh.exec(`near view ${contractName} get_total_deposit '{}' --accountId ${masterAccount}`);
-//sh.exec(`near call ${contractName} withdrawal '{}' --accountId ${masterAccount}`);
+//sh.exec(`near call ${contractName} withdraw '{}' --accountId ${masterAccount}`);
+//sh.exec(`near call ${contractName} withdraw_to_owner '{"account_id": "${masterAccount}"}' --accountId ${masterAccount}`);
 
 // exit script with the same code as the build command
 process.exit();
