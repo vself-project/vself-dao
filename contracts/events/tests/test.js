@@ -128,9 +128,9 @@ const startFinishedEvent = `near call ${contractName} start_event '{"event_data"
 // if (sh.exec(startEvent2).code === 0) {
 //   console.log("Test event 2 starts successfully");
 // }
-if (sh.exec(startEventCmd).code === 0) {
-  console.log("Start default event successfull");
-}
+// if (sh.exec(startEventCmd).code === 0) {
+//   console.log("Start default event successfull");
+// }
 // if (sh.exec(startFinishedEvent).code === 0) {
 //   console.log("Start finished event successfull");
 // }
@@ -151,6 +151,8 @@ sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit"
 // sh.exec(`near view ${contractName} get_event_data '{"event_id": ${finishedEventId}}'`);
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${finishedEventId}, "username": "jkahfkjashdfs.testnet", "request": "hello" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${finishedEventId}, "username": "jkahfkjashdfs.testnet", "request": "goodbye" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
+// sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "You have" }' --accountId ${masterAccount} --depositYocto 1 --gas 300000000000000`);
+
 // sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${finishedEventId}}'`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${finishedEventId}, "account_id": "jkahfkjashdfs.testnet"}'`);
 
