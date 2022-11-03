@@ -22,7 +22,10 @@
     "events:deploy": "env-cmd -f ./config/deployment.env node contracts/events/deploy.js",
     "linkdrop:build": "node contracts/linkdrop/compile.js",
     "linkdrop:dev:deploy": "yarn linkdrop:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/linkdrop.wasm && env-cmd -f ./neardev/dev-account.env node contracts/linkdrop/init.js",
-    "linkdrop:deploy": "env-cmd -f ./config/deployment.env node contracts/linkdrop/deploy.js"
+    "linkdrop:deploy": "env-cmd -f ./config/deployment.env node contracts/linkdrop/deploy.js",
+    "deposits:build": "node contracts/deposits/compile.js",
+    "deposits:dev:deploy": "yarn deposits:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/deposits.wasm && env-cmd -f ./neardev/dev-account.env node contracts/deposits/init.js",
+    "deposits:test": "env-cmd -f ./config/deployment.env node contracts/deposits/tests/test.js"
   },
   "dependencies": {
     "express": "^4.17.3",

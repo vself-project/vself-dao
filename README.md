@@ -12,7 +12,7 @@ For details of events smart-contract and deployment instructions please refer to
 
 ### Production (Mainnet)
 - [web application](https://vself.app)
-- [smart-contract](https://explorer.near.org/accounts/v2.event.vself.near) deployed to v2.event.vself.near
+- [smart-contract](https://explorer.near.org/accounts/v2.event.vself.near) deployed to v3.event.vself.near
 
 ## Synopsys
 
