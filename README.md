@@ -1,18 +1,21 @@
 # vSelf DAO
 
-Root of vSelf community.
+Root of vSelf community and it's codebase. This repository contains general information about vSelf project along with smart-contracts and reference documentation. Other parts of the project can be located in the following repositories:
+
+1. vSelf web application and API endpoints (in Beta) [vself-beta](https://github.com/vself-project/vself-beta)
+1. vSelf SDK and npm package (with ZKP tools) (proof-of-concept) [vstudio-metabuild](https://github.com/vself-project/vstudio-metabuild)
 
 ## Deployment status
 
-For details of events smart-contract and deployment instructions please refer to [Events](EVENTS.md).
-
 ### Staging (Testnet)
+
 - [web application](https://testnet.vself.app)
 - [smart-contract](https://explorer.testnet.near.org/accounts/events_v22.sergantche.testnet) deployed to events_v22.sergantche.testnet
 
 ### Production (Mainnet)
+
 - [web application](https://vself.app)
-- [smart-contract](https://explorer.near.org/accounts/v2.event.vself.near) deployed to v3.event.vself.near
+- [smart-contract](https://explorer.near.org/accounts/v3.event.vself.near) deployed to v3.event.vself.near
 
 ## Synopsys
 
@@ -49,19 +52,21 @@ The main risk we want to avoid is dependence on service providers who can disrup
 As we need to host our cloud services somewhere we currently use GCloud which poses kind of deplatforming threat. This can be addressed by incentivisation of cloud infrastructure providers and as well as making our cloud include more hosting providers with time.
 
 Our codebase is stored on GitHub, and consists of the following:
+
 - Cloud configuration, design documentation
 - vSelf smart contracts (business logic)
-- Dockerized vSelf node which contains business logic:
-    1. NEAR Indexer service (in Rust)
-    1. GUN database storage instance
 - vSelf tooling (CLI) + TS/JS SDK for application developers
 - vSelf progressiwe web application / identity wallet / API service (Next.js + tRPC)
+- Dockerized vSelf node which contains proxy logic:
+  1. DID and verifiable credentials registry
+  1. GUN database / OrbitDB storage instances
 
 ![](docs/system.png)
 
 ![](docs/legend.png)
 
-## Use cases
-[Events](EVENTS.md)
+ZKP technology is an ivaluable buiding block for self-sovereign identity and we have been developing some practical applications of this tech. We are looking for the solution of proof-of-set-membership implementations. Our first iteration uses Bulletproofs which is well established zk-proof system without trusted setup (compared to some zkSNARKs). On top of Bulletproofs we build our R1CS circuit to prove set membership in zero-knowledge, so on-chain data doesn't reveal members identity. This is quite experimental and uses MiMC hash under the hood (as it has low multiplicative complexity and simple rust implementation). For the hash function we plan to consider modern ZK-friendly ones such as popular Poseidon and Reinforced Concrete (based on lookup arguments). For a constanst size accumulator we have options to explore in the near future: replacing explicit membership set with Merkle tree root (or even Verkle tree root). As for the proof system we consider Halo2 (zCash) also Bulletproof-based one, for even shorter proofs and lower verification costs.
 
-[Governance](HQ.md)
+## Use cases
+
+For details of events smart-contract and deployment instructions please refer to [Events](EVENTS.md).

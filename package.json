@@ -1,35 +1,22 @@
 {
   "name": "vself-dao",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Source of truth for vSelf DAO root contracts / CLI",
   "main": "service.js",
   "repository": "git@github.com:vself-project/vself-dao.git",
   "author": "ilerik",
   "license": "MIT",
   "scripts": {
-    "pow:build": "node contracts/pow/compile.js",
-    "pow:dev:deploy": "yarn pow:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/pow_contract.wasm && env-cmd -f ./neardev/dev-account.env node contracts/pow/init.js",
-    "pow:deploy": "env-cmd -f ./config/deployment.env node contracts/pow/deploy.js",
-    "pow:test": "env-cmd -f ./config/deployment.env node contracts/pow/test.js",
-    "pow:upload:evidences": "env-cmd -f ./config/deployment.env node contracts/pow/upload_evidences.js",
-    "nft_reward:build": "node contracts/nft_reward/compile.js",
-    "nft_reward:dev:deploy": "yarn nft_reward:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/nft_reward_contract.wasm && env-cmd -f ./neardev/dev-account.env node contracts/nft_reward/init.js",
-    "nft_reward:deploy": "env-cmd -f ./config/deployment.env node contracts/nft_reward/deploy.js",
     "events:build": "node contracts/events/compile.js",
     "events:dev:deploy": "yarn events:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/events.wasm && env-cmd -f ./neardev/dev-account.env node contracts/events/init.js",
     "events:test": "env-cmd -f ./config/deployment.env node contracts/events/tests/test.js",
     "events:create": "env-cmd -f ./config/deployment.env node contracts/events/tests/start_events.js",
-    "events:deploy": "env-cmd -f ./config/deployment.env node contracts/events/deploy.js",
-    "linkdrop:build": "node contracts/linkdrop/compile.js",
-    "linkdrop:dev:deploy": "yarn linkdrop:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/linkdrop.wasm && env-cmd -f ./neardev/dev-account.env node contracts/linkdrop/init.js",
-    "linkdrop:deploy": "env-cmd -f ./config/deployment.env node contracts/linkdrop/deploy.js",
+    "events:deploy": "env-cmd -f ./config/deployment.env node contracts/events/deploy.js",    
     "deposits:build": "node contracts/deposits/compile.js",
     "deposits:dev:deploy": "yarn deposits:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/deposits.wasm && env-cmd -f ./neardev/dev-account.env node contracts/deposits/init.js",
     "deposits:test": "env-cmd -f ./config/deployment.env node contracts/deposits/tests/test.js"
   },
-  "dependencies": {
-    "express": "^4.17.3",
-    "gun": "^0.2020.1236",
+  "dependencies": {    
     "shelljs": "^0.8.5"
   },
   "devDependencies": {
