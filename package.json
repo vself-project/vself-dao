@@ -14,7 +14,8 @@
     "events:deploy": "env-cmd -f ./config/deployment.env node contracts/events/deploy.js",    
     "deposits:build": "node contracts/deposits/compile.js",
     "deposits:dev:deploy": "yarn deposits:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/deposits.wasm && env-cmd -f ./neardev/dev-account.env node contracts/deposits/init.js",
-    "deposits:test": "env-cmd -f ./config/deployment.env node contracts/deposits/tests/test.js"
+    "deposits:test": "env-cmd -f ./config/deployment.env node contracts/deposits/tests/test.js",
+    "communities:build": "node contracts/communities/compile.js"
   },
   "dependencies": {    
     "shelljs": "^0.8.5"

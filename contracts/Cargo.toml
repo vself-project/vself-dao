@@ -6,6 +6,9 @@ edition = "2021"
 
 [dev-dependencies]
 
+[lib]
+crate-type = ["cdylib"]
+
 [profile.release]
 codegen-units = 1
 # Tell `rustc` to optimize for small code size.
@@ -17,8 +20,4 @@ panic = "abort"
 overflow-checks = true
 
 [workspace]
-members = [
-    "events",
-    "near-contract-standards",
-    "deposits"
-]
+members = ["events", "near-contract-standards", "deposits", "communities"]
