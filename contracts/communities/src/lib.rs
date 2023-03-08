@@ -12,7 +12,7 @@ use near_sdk::{env, near_bindgen, BorshStorageKey, PanicOnDefault, AccountId};
 use near_sdk::serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-const ERR_CALLER_IS_NOT_OWNER: &str = "Method call access denied";
+//const ERR_CALLER_IS_NOT_OWNER: &str = "Method call access denied";
 
 #[derive(BorshSerialize, BorshStorageKey)]
 enum StorageKey {
