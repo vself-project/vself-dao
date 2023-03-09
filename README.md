@@ -12,13 +12,13 @@ Frontend web app & API endpoints are available in this [repo](https://github.com
 ### SBT events
 
 
-- [testnet](https://explorer.testnet.near.org/accounts/events_v22.sergantche.testnet) deployed at events_v29.sergantche.testnet
-- [mainnet](https://explorer.near.org/accounts/v3.event.vself.near) deployed at v3.event.vself.near
+- [testnet contract](https://explorer.testnet.near.org/accounts/events_v22.sergantche.testnet) deployed at events_v29.sergantche.testnet
+- [mainnet contract](https://explorer.near.org/accounts/v3.event.vself.near) deployed at v3.event.vself.near
 
 ### Community toolkit
 
-- [testnet](https://explorer.testnet.near.org/accounts/communities_v6.sergantche.testnet) deployed at communities_v6.sergantche.testnet)
-- mainnent comming soon
+- [testnet contract](https://explorer.testnet.near.org/accounts/communities_v6.sergantche.testnet) deployed at communities_v6.sergantche.testnet)
+- mainnent contract comming soon
 
 
 
