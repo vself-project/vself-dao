@@ -6,7 +6,7 @@
 
 Current repo contains vSelf smart contracts source code.
 
-Frontend web app is available in this [repo](https://github.com/vself-project/vself-beta).
+Frontend web app & API endpoints are available in this [repo](https://github.com/vself-project/vself-beta).
 
 
 
