@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://vself.app/ninja3.png" alt="Vself Ninja"/>
-</p>
+![](https://github.com/vself-project/.github/blob/master/images/vSelf%20community.png)
 
 # vSelf DAO
 
