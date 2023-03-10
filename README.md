@@ -18,7 +18,7 @@ Frontend web app & API endpoints are available in this [repo](https://github.com
 
 ### Community management toolkit
 
-- [testnet contract](https://explorer.testnet.near.org/accounts/communities_v6.sergantche.testnet) deployed at communities_v6.sergantche.testnet)
+- [testnet contract](https://explorer.testnet.near.org/accounts/communities_v6.sergantche.testnet) deployed at communities_v6.sergantche.testnet
 - mainnent contract comming soon
 
 
