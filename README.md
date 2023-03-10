@@ -121,9 +121,6 @@ Currently it holds explicit list of membeship commitments for every community cr
 
 Each user can create any number of communities under her control.
 
-### Installation
-//tbd
-
 ### Data structure
 
 Community metadata
