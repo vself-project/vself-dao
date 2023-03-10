@@ -97,7 +97,7 @@ struct EventStats {
 
 - `stop_event(event_id: u32)` sets event with _event_id_ as inactive disallowing checkins;
 
-### View methods:
+### View methods
 
 - `get_ongoing_events(from_index: u64, limit: u64)` returns array of tuples `(event_id: u32, data: EventData, stats: EventStats)` with id, data and stats of active events using pagination. That is, for an event that has not been stopped and whose _finish_time_ has not yet arrived;
 
@@ -112,7 +112,29 @@ struct EventStats {
 - `get_event_actions(event_id: u32, from_index: u64, limit: u64)` returns array of data about successful and unsuccessful checkins of the event with  _event_id_ with pagination (using _from_index_ and _limit_);
 
 
-## Collection smart contact 
+## Community smart contact 
 
 ### Synopsis
+This contract is responsible for creating community & managing on-chain community metadata. Currently it holds explicit list of membeship commitments for every community created. Each user can create any number of communities under her control.
 
+### Installation
+
+### Data structure
+
+Community metadata
+``` 
+struct CommunityData {
+    community_owner: AccountId,
+    community_name: String,
+    community_description: String,
+    community_source_image: String,
+    badge_event_id: String,
+    badge_name: String,
+    badge_description: String,
+    badge_source_image: String,
+}
+``` 
+
+### Change state methods
+
+### View methods
