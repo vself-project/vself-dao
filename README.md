@@ -115,9 +115,14 @@ struct EventStats {
 ## Community smart contact 
 
 ### Synopsis
-This contract is responsible for creating community, on-chain managing community metadata & community members. Currently it holds explicit list of membeship commitments for every community created. Each user can create any number of communities under her control.
+This contract is responsible for creating community, on-chain managing community metadata & community members. 
+
+Currently it holds explicit list of membeship commitments for every community created. 
+
+Each user can create any number of communities under her control.
 
 ### Installation
+//tbd
 
 ### Data structure
 
@@ -139,5 +144,11 @@ struct Contract {
 }
 ``` 
 ### Change state methods
+- `add_community(community_data: CommunityData)`creates new community & returns the _community_id_.
+- `remove_community(community_id: String)` delates community with _community_id_ & returns action status.
+- `add_member(community_id: String, commitment: String)` adds new member with _commitment_ in community with _community_id_.
+- `add_public_member(community_id: String, commitment: String, near_id: AccountId)` discloses the _near_id_ of the member with _commitment_.
 
 ### View methods
+- get_community_list(&self, from_index: usize, limit: usize) id metadata for each
+- get_community(&self, community_id: String) metadata oublic private
