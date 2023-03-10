@@ -39,8 +39,6 @@ Each SBT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `
 
 ### Installation
 
-Compile contract:
-
 ```bash
 #Compile contract
 yarn events:build
@@ -51,12 +49,12 @@ Set values for `EVENTS_CONTRACT` (account on which the contract will be deployed
 To deploy into testnet run:
 
 ```bash
+#Testnen run
 yarn events:deploy
 ```
 
-To deploy into mainnet run:
-
 ```bash
+#Mainnet run
 NEAR_ENV=mainnet 
 yarn events:deploy
 ```
