@@ -1,6 +1,7 @@
 <p align="center">
   <img src="https://github.com/vself-project/.github/blob/master/images/vSelf%20community.png" alt="Vself community"/>
 </p>
+
 # vSelf DAO
 
 Current repo contains vSelf smart contracts source code.
