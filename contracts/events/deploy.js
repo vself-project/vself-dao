@@ -2,15 +2,16 @@ const sh = require("shelljs");
 const { EVENTS_CONTRACT, MASTER_ACCOUNT } = process.env;
 
 const DELETE_BEFORE_DEPLOY = process.env.DELETE_BEFORE_DEPLOY === "true";
-const CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY = process.env.CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY === "true";
+const CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY =
+  process.env.CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY === "true";
 
 // Initial contract account balance
 let initialBalance = 21;
 
 // Recreate account
 if (DELETE_BEFORE_DEPLOY) {
-  console.log('Recreate contract account: ', EVENTS_CONTRACT);
-  sh.exec(`near delete ${LINKDREVENTS_CONTRACTOP_CONTRACT} ${MASTER_ACCOUNT}`);
+  console.log("Recreate contract account: ", EVENTS_CONTRACT);
+  sh.exec(`near delete ${EVENTS_CONTRACT} ${MASTER_ACCOUNT}`);
   sh.exec(
     `near create-account ${EVENTS_CONTRACT} --masterAccount=${MASTER_ACCOUNT} --initialBalance ${initialBalance}`
   );
@@ -18,7 +19,7 @@ if (DELETE_BEFORE_DEPLOY) {
   // Copy credentials for later deploy
   sh.exec(`cp ~/.near-credentials/testnet/${EVENTS_CONTRACT}.json ./creds`);
 } else if (CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY) {
-  console.log('Create contract account before deploy: ', EVENTS_CONTRACT);
+  console.log("Create contract account before deploy: ", EVENTS_CONTRACT);
   sh.exec(
     `near create-account ${EVENTS_CONTRACT} --masterAccount=${MASTER_ACCOUNT} --initialBalance ${initialBalance}`
   );
