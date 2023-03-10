@@ -105,10 +105,14 @@ struct EventStats {
 
 - `get_event_data(event_id: u32)` returns _EventData_ for the event with id _event_id_;
 
-- `get_event_stats(event_id: u32)` returns _EventStats_ consisting of some statistics about the event with id _event_id_;
+- `get_event_stats(event_id: u32)` returns _EventStats_ consisting of some statistics about the event with  _event_id_;
 
 - `get_user_balance(event_id: u32, account_id: AccountId)` returns array of boolean values corresponding to array of quests for the event with _event_id_. If _account_id_ made successfull checkin for a quest then value is true and the value is false otherwise;
 
-- `get_event_actions(event_id: u32, from_index: u64, limit: u64)` returns array of data about successful and unsuccessful checkins of the event with id _event_id_ with pagination (using _from_index_ and _limit_);
+- `get_event_actions(event_id: u32, from_index: u64, limit: u64)` returns array of data about successful and unsuccessful checkins of the event with  _event_id_ with pagination (using _from_index_ and _limit_);
 
-For more details of events smart contract and deployment instructions please refer to [Events](EVENTS.md).
+
+## Collection smart contact 
+
+### Synopsis
+
