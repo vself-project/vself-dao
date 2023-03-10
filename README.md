@@ -79,6 +79,18 @@ struct EventData {
     quests: Vec<QuestData>,
 }
 ```
+Collection stats 
+```
+struct EventStats {
+    participants: HashSet<AccountId>, // Participants of current event
+    created_by: AccountId,
+    created_at: u64,
+    stopped_at: Option<u64>,
+    total_rewards: u64,
+    total_users: u64,
+    total_actions: u64,
+}
+```  
 ### Change state methods
 
 - `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event. _EventData_ consists of following fields: _event_name_, _event_description_, _start_time_, _finish_time_ and _quests_. _quests_ is an array of _QuestData_ that contains the data about a specific quest;
