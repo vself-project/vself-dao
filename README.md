@@ -59,16 +59,26 @@ To deploy into mainnet run:
 NEAR_ENV=mainnet yarn events:deploy
 ```
 ### Data structure
+SBT reward
 ```
 struct QuestData {
-    pub qr_prefix_enc: String,
-    pub qr_prefix_len: usize,
-    pub reward_title: String,
-    pub reward_description: String,
-    pub reward_uri: String,
+   qr_prefix_enc: String,
+   qr_prefix_len: usize,
+   reward_title: String,
+   reward_description: String,
+   reward_uri: String,
 }
 ```
-
+SBT collection
+```
+struct EventData {
+    event_name: String,
+    event_description: String,
+    start_time: u64,
+    finish_time: u64,
+    quests: Vec<QuestData>,
+}
+```
 ### Change state methods
 
 - `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event. _EventData_ consists of following fields: _event_name_, _event_description_, _start_time_, _finish_time_ and _quests_. _quests_ is an array of _QuestData_ that contains the data about a specific quest;
