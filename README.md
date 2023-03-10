@@ -35,7 +35,7 @@ Frontend web app & API endpoints are available in this [repo](https://github.com
 
 This contract mints non-transferable NFT (Soul Boud Token) to recipient account on successful checkin (e.g. via claim link or QR-code). 
 
-Each SBT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `<reward_index>` is the index the reward from the `<event_id>` SBT collection. 
+Each SBT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `<reward_index>` is the index of the reward from the `<event_id>` SBT collection. 
 
 ### Installation
 
@@ -45,8 +45,6 @@ yarn events:build
 ```
 
 Set values for `EVENTS_CONTRACT` (account on which the contract will be deployed) and `MASTER_ACCOUNT` (account from which the contract subaccount will be created) in `./config/deployment.env`
-
-To deploy into testnet run:
 
 ```bash
 #Testnen run
@@ -93,11 +91,11 @@ struct EventStats {
 ```  
 ### Change state methods
 
-- `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event. _EventData_ consists of following fields: _event_name_, _event_description_, _start_time_, _finish_time_ and _quests_. _quests_ is an array of _QuestData_ that contains the data about a specific quest;
+- `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event.
 
-- `checkin(event_id: u32, username: String, request: String)` checks if the `sha256(request)` matches the value _qr_prefix_enc_ specified in one of the quests of the event with id _event_id_. In case of success the contract mints non transferable NFT specified in the quest and sets NEAR account _username_ as its owner;
+- `checkin(event_id: u32, username: String, request: String)` checks if the `sha256(request)` matches the value _qr_prefix_enc_ specified in one of the quests of the event with  _event_id_. In case of success the contract mints SBT specified in the quest to the NEAR account _username_ owner;
 
-- `stop_event(event_id: u32)` set event with id _event_id_ as inactive disallowing checkins;
+- `stop_event(event_id: u32)` sets event with _event_id_ as inactive disallowing checkins;
 
 ### View methods:
 
