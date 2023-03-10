@@ -145,10 +145,10 @@ struct Contract {
 ``` 
 ### Change state methods
 - `add_community(community_data: CommunityData)`creates new community & returns the _community_id_.
-- `remove_community(community_id: String)` delates community with _community_id_ & returns action status.
+- `remove_community(community_id: String)` delates community with _community_id_.
 - `add_member(community_id: String, commitment: String)` adds new member with _commitment_ in community with _community_id_.
 - `add_public_member(community_id: String, commitment: String, near_id: AccountId)` discloses the _near_id_ of the member with _commitment_.
 
 ### View methods
-- get_community_list(&self, from_index: usize, limit: usize) id metadata for each
-- get_community(&self, community_id: String) metadata oublic private
+- `get_community_list(from_index: usize, limit: usize)` returns _community_id_ & community metadata for each community.
+- `get_community(community_id: String)` returns community metadata and its public & private members.
