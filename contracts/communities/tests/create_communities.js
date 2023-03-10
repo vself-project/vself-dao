@@ -1,11 +1,12 @@
 const sh = require("shelljs");
 const fs = require("fs");
 
-const contractName = "communities_v6.sergantche.testnet";
-const masterAccount = "sergantche.testnet";
-
-// Call constructor one time
-sh.exec(`near call ${contractName} new --accountId ${contractName}`);
+const contractName =
+  process.env.COMMUNITIES_CONTRACT ||
+  fs.readFileSync("./neardev/dev-account").toString();
+const masterAccount =
+  process.env.MASTER_ACCOUNT ||
+  fs.readFileSync("./neardev/dev-account").toString();
 
 // Default communities for tests
 const addDefaultCommunity = `near call ${contractName} add_community '{"community_data": {
@@ -31,7 +32,7 @@ if (sh.exec(addDefaultCommunity).code === 0) {
   console.log("Add first  default community");
 }
 
-// Bears;
+// Bears community
 if (sh.exec(addChickenCommunity).code === 0) {
   console.log("Add bear community");
 }
@@ -40,6 +41,11 @@ if (sh.exec(addChickenCommunity).code === 0) {
 if (sh.exec(addVselfDAO).code === 0) {
   console.log("Add vSelf DAO community");
 }
+
+// Get all communities
+sh.exec(
+  `near view ${contractName} get_community_list '{"from_index": 0, "limit": 100}' --accountId ${masterAccount}`
+);
 
 // exit script with the same code as the build command
 process.exit();

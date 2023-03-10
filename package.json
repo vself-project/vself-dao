@@ -11,11 +11,15 @@
     "events:dev:deploy": "yarn events:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/events.wasm && env-cmd -f ./neardev/dev-account.env node contracts/events/init.js",
     "events:test": "env-cmd -f ./config/deployment.env node contracts/events/tests/test.js",
     "events:create": "env-cmd -f ./config/deployment.env node contracts/events/tests/start_events.js",
-    "events:deploy": "env-cmd -f ./config/deployment.env node contracts/events/deploy.js",    
+    "events:deploy": "env-cmd -f ./config/deployment.env node contracts/events/deploy.js",
     "deposits:build": "node contracts/deposits/compile.js",
     "deposits:dev:deploy": "yarn deposits:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/deposits.wasm && env-cmd -f ./neardev/dev-account.env node contracts/deposits/init.js",
     "deposits:test": "env-cmd -f ./config/deployment.env node contracts/deposits/tests/test.js",
-    "communities:build": "node contracts/communities/compile.js"
+    "communities:build": "node contracts/communities/compile.js",
+    "communities:dev:deploy": "yarn communities:build && rm -rf neardev && near dev-deploy contracts/target/wasm32-unknown-unknown/release/communities.wasm && env-cmd -f ./neardev/dev-account.env node contracts/communities/init.js",
+    "communities:test": "env-cmd -f ./config/deployment.env node contracts/communities/tests/test.js",
+    "communities:deploy": "env-cmd -f ./config/deployment.env node contracts/communities/deploy.js",
+    "communities:create": "env-cmd -f ./config/deployment.env node contracts/communities/tests/create_communities.js"
   },
   "dependencies": {    
     "shelljs": "^0.8.5"
