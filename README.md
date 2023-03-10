@@ -37,11 +37,12 @@ This contract mints non-transferable NFT (Soul Boud Token) to recipient account 
 
 Each SBT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `<reward_index>` is the index the reward from the `<event_id>` SBT collection. 
 
-### Deployment
+### Installation
 
 Compile contract:
 
 ```bash
+#Compile contract
 yarn events:build
 ```
 
