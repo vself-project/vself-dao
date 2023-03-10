@@ -56,7 +56,8 @@ yarn events:deploy
 To deploy into mainnet run:
 
 ```bash
-NEAR_ENV=mainnet yarn events:deploy
+NEAR_ENV=mainnet 
+yarn events:deploy
 ```
 ### Data structure
 SBT reward
@@ -82,7 +83,7 @@ struct EventData {
 Collection stats 
 ```
 struct EventStats {
-    participants: HashSet<AccountId>, // Participants of current event
+    participants: HashSet<AccountId>,
     created_by: AccountId,
     created_at: u64,
     stopped_at: Option<u64>,
