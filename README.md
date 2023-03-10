@@ -35,7 +35,7 @@ Frontend web app & API endpoints are available in this [repo](https://github.com
 
 This contract mints non-transferable NFT (Soul Boud Token) to recipient account on successful checkin (e.g. via claim link or QR-code). 
 
-Each NFT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `<reward_index>` is the index the reward from the `<event_id>` collection. 
+Each SBT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `<reward_index>` is the index the reward from the `<event_id>` SBT collection. 
 
 ### Deployment
 
@@ -57,6 +57,16 @@ To deploy into mainnet run:
 
 ```bash
 NEAR_ENV=mainnet yarn events:deploy
+```
+### Data structure
+```
+struct QuestData {
+    pub qr_prefix_enc: String,
+    pub qr_prefix_len: usize,
+    pub reward_title: String,
+    pub reward_description: String,
+    pub reward_uri: String,
+}
 ```
 
 ### Change state methods
@@ -80,7 +90,5 @@ NEAR_ENV=mainnet yarn events:deploy
 - `get_user_balance(event_id: u32, account_id: AccountId)` returns array of boolean values corresponding to array of quests for the event with _event_id_. If _account_id_ made successfull checkin for a quest then value is true and the value is false otherwise;
 
 - `get_event_actions(event_id: u32, from_index: u64, limit: u64)` returns array of data about successful and unsuccessful checkins of the event with id _event_id_ with pagination (using _from_index_ and _limit_);
-
-- `get_user_balance(event_id: u32, account_id: AccountId)` can be used to get information about one's obtained rewards.
 
 For more details of events smart contract and deployment instructions please refer to [Events](EVENTS.md).
