@@ -115,7 +115,7 @@ struct EventStats {
 ## Community smart contact 
 
 ### Synopsis
-This contract is responsible for creating community & managing on-chain community metadata. Currently it holds explicit list of membeship commitments for every community created. Each user can create any number of communities under her control.
+This contract is responsible for creating community, on-chain managing community metadata & community members. Currently it holds explicit list of membeship commitments for every community created. Each user can create any number of communities under her control.
 
 ### Installation
 
@@ -128,13 +128,16 @@ struct CommunityData {
     community_name: String,
     community_description: String,
     community_source_image: String,
-    badge_event_id: String,
-    badge_name: String,
-    badge_description: String,
-    badge_source_image: String,
 }
 ``` 
-
+Communities with their metadata and public & private members
+``` 
+struct Contract {
+    members_by_community: LookupMap<String, Vec<String>>,
+    public_members_by_community: LookupMap<String, HashMap<String, AccountId>>,
+    communities: UnorderedMap<String, CommunityData>
+}
+``` 
 ### Change state methods
 
 ### View methods
