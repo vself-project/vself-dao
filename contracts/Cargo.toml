@@ -20,4 +20,4 @@ panic = "abort"
 overflow-checks = true
 
 [workspace]
-members = ["events", "near-contract-standards", "deposits", "communities"]
+members = ["events", "near-contract-standards", "communities"]
