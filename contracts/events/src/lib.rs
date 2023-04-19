@@ -23,7 +23,7 @@ fn read_be_u32(input: &mut &[u8]) -> u32 {
 #[derive(Clone, Debug, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct QuestData {
-    pub qr_prefix_enc: String,
+    pub qr_prefix: String,
     pub qr_prefix_len: usize,
     pub reward_title: String,
     pub reward_description: String,
@@ -56,11 +56,20 @@ pub struct EventStats {
 
 #[derive(Clone, Debug, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
+pub struct CollectionSettings {
+    signin_request: bool,
+    transferability: bool,
+    limited_collection: bool,
+}
+
+#[derive(Clone, Debug, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct ActionData {
     timestamp: u64,
     username: String,
     qr_string: String,
     reward_index: usize,
+    ambassador: Option<String>,
 }
 
 #[derive(Clone, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
@@ -87,6 +96,7 @@ pub struct Event {
     pub nonce: u32, // Id
     pub data: EventData,
     pub stats: EventStats,
+    pub settings: CollectionSettings,
 }
 
 #[near_bindgen]
@@ -166,7 +176,7 @@ impl Contract {
 
     /// Initiate next event
     #[payable]
-    pub fn start_event(&mut self, event_data: EventData) -> u32 {
+    pub fn start_event(&mut self, event_data: EventData, collection_settings: CollectionSettings) -> u32 {
         let user_id = env::predecessor_account_id();
         let timestamp: u64 = env::block_timestamp();
         let hash: Vec<u8> = env::sha256(&event_data.try_to_vec().unwrap());
@@ -175,7 +185,7 @@ impl Contract {
         // assert event doesnt exist
         assert!(
             self.events.get(&nonce).is_none(),
-            "Event with provided already exists"
+            "Event with provided data already exists"
         );
 
         let initial_stats = EventStats {
@@ -203,6 +213,7 @@ impl Contract {
             nonce, // Unique event ID
             data: event_data,
             stats: initial_stats,
+            settings: collection_settings,
         };
 
         // Update index by user
@@ -319,6 +330,13 @@ impl Contract {
             "Event with given id is expired"
         );
 
+        // Check the collection access
+        let limited_collection = event.settings.limited_collection.clone();
+        if limited_collection {
+            let user_id = env::predecessor_account_id();
+            assert!(!self.ongoing_events.contains_key(&user_id), "No rights to issue a token");
+        }
+
         // Check if account seems valid
         assert!(
             AccountId::try_from(username.clone()).is_ok(),
@@ -330,11 +348,9 @@ impl Contract {
         let qr_string = request.clone();
         let quests = event.data.quests.clone();
         let mut reward_index = 0;
-        for quest in &quests {
+        for quest in &quests {    
             if let Some(request_prefix) = request.get(0..quest.qr_prefix_len) {
-                let hashed_input = env::sha256(request_prefix.as_bytes());
-                let hashed_input_hex = hex::encode(&hashed_input);
-                if hashed_input_hex == quest.qr_prefix_enc {
+                if request_prefix == quest.qr_prefix {
                     break;
                 };
             }
@@ -346,6 +362,149 @@ impl Contract {
             qr_string: qr_string.clone(),
             reward_index,
             timestamp,
+            ambassador: None,
+        };
+
+        log!("Action data: {:?}", action_data);
+
+        // Register checkin data
+        let mut stats = event.stats.clone();
+
+        // Check if we have a new user
+        if stats.participants.insert(user_account_id.clone()) {
+            stats.total_users += 1;
+
+            // Initial balance
+            self.balances.get(&event_id).unwrap().insert(
+                &user_account_id,
+                &UserBalance {
+                    karma_balance: 0,
+                    quests_status: vec![false; quests.len()],
+                },
+            );
+        }
+
+        // Register action
+        let mut actions = self.actions.get(&event_id).unwrap();
+        actions.push(&action_data);
+        stats.total_actions += 1;
+
+        // Update contract state
+        self.actions.insert(&event_id, &actions);
+
+        // Check if we've been awarded a reward
+        if let Some(quest) = quests.get(reward_index) {
+            // Update state if we are lucky
+            stats.total_rewards += 1;
+            event.stats = stats;
+
+            // Update user balance
+            let mut balance = self
+                .balances
+                .get(&event_id)
+                .unwrap()
+                .get(&user_account_id)
+                .expect("ERR_NOT_REGISTERED");
+            balance.karma_balance += 1; // Number of successfull actions
+
+            // Do we have this reward already
+            if balance.quests_status[reward_index] {
+                // Yes (no reward then)
+                self.events.insert(&event_id, &event);
+
+                return Some(ActionResult {
+                    index: reward_index,
+                    got: true,
+                    title: quest.reward_title.clone(),
+                    description: quest.reward_description.clone(),
+                });
+            } else {
+                // No
+                balance.quests_status[reward_index] = true;
+                self.balances
+                    .get(&event_id)
+                    .unwrap()
+                    .insert(&user_account_id, &balance);
+
+                // NFT Part (issue token)
+                self.issue_nft_reward(
+                    user_account_id.clone(),
+                    event_id.clone(),
+                    reward_index.clone(),
+                );
+
+                self.events.insert(&event_id, &event);
+                return Some(ActionResult {
+                    index: reward_index,
+                    got: false,
+                    title: quest.reward_title.clone(),
+                    description: quest.reward_description.clone(),
+                });
+            }
+        } else {
+            // Update stats
+            event.stats = stats;
+            log!("No reward for this checkin! User: {}", username);
+            self.events.insert(&event_id, &event);
+            None
+        }
+    }
+
+    #[payable]
+    pub fn referral_checkin(
+        &mut self,
+        event_id: u32,
+        username: String,
+        request: String,
+        ambassador: String
+    ) -> Option<ActionResult> {
+        // Assert event is active
+        assert!(
+            self.public_events.contains(&event_id),
+            "No event with this id is running"
+        );
+
+        // Check if event is not expired
+        let timestamp: u64 = env::block_timestamp();
+        let mut event = self.events.get(&event_id).unwrap();
+        assert!(
+            event.data.finish_time > timestamp,
+            "Event with given id is expired"
+        );
+
+        // Check the collection access
+        let limited_collection = event.settings.limited_collection.clone();
+        if limited_collection {
+            let user_id = env::predecessor_account_id();
+            assert!(self.ongoing_events.contains_key(&user_id), "No rights to issue a token");
+        }
+
+        // Check if account seems valid
+        assert!(
+            AccountId::try_from(username.clone()).is_ok(),
+            "Valid account is required"
+        );
+        let user_account_id = AccountId::try_from(username.clone()).unwrap();
+
+        // Match QR code to quest
+        let qr_string = request.clone();
+        let quests = event.data.quests.clone();
+        let mut reward_index = 0;
+        for quest in &quests {    
+            if let Some(request_prefix) = request.get(0..quest.qr_prefix_len) {
+                if request_prefix == quest.qr_prefix {
+                    break;
+                };
+            }
+            reward_index = reward_index + 1;
+        }
+
+        let action_data = ActionData {
+            username: username.clone(),
+            qr_string: qr_string.clone(),
+            reward_index,
+            timestamp,
+            ambassador: Some(ambassador.clone()),
         };
 
         log!("Action data: {:?}", action_data);

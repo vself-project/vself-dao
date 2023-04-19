@@ -18,7 +18,7 @@ impl Contract {
     }
 
     /// Get all ongoing events (with pagination)
-    pub fn get_ongoing_events(&self, from_index: u64, limit: u64) -> Vec<(u32, EventData, EventStats)> {
+    pub fn get_ongoing_events(&self, from_index: u64, limit: u64) -> Vec<(u32, EventData, CollectionSettings, EventStats)> {
         let timestamp: u64 = env::block_timestamp();
         let ids = self.public_events.as_vector();
         let mut index = from_index;
@@ -27,7 +27,7 @@ impl Contract {
             let event_id = ids.get(index).unwrap();
             let event = self.events.get(&event_id).unwrap();
             if timestamp < event.data.finish_time {
-                result.push((event_id, event.data, event.stats));
+                result.push((event_id, event.data, event.settings, event.stats));
             }
             index = index + 1;
         }
@@ -35,12 +35,12 @@ impl Contract {
     }
 
     /// Get ongoing events for specific user
-    pub fn get_ongoing_user_events(&self, account_id: AccountId) -> Vec<(u32, EventData, EventStats)> {
+    pub fn get_ongoing_user_events(&self, account_id: AccountId) -> Vec<(u32, EventData, CollectionSettings, EventStats)> {
         let ids = self.ongoing_events.get(&account_id).unwrap_or(HashSet::new());
         let mut user_events = vec![];
         for id in ids {
             let event = self.events.get(&id).unwrap();
-            user_events.push((id, event.data, event.stats));
+            user_events.push((id, event.data, event.settings, event.stats));
         }
         user_events
     }
@@ -50,6 +50,15 @@ impl Contract {
         let data = self.events.get(&event_id);
         match data {
             Some(event) => Some(event.data),
+            None => None
+        }
+    }
+
+    /// Return collection settings for the event
+    pub fn get_collection_settings(self, event_id: u32) -> Option<CollectionSettings> {        
+        let data = self.events.get(&event_id);
+        match data {
+            Some(event) => Some(event.settings),
             None => None
         }
     }

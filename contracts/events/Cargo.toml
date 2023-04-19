@@ -1,6 +1,6 @@
 [package]
 name = "events"
-version = "1.0.0"
+version = "2.0.0"
 authors = ["vSelf team <ie@vself.app>"]
 edition = "2021"
 
