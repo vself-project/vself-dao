@@ -129,9 +129,9 @@ const startFinishedEvent = `near call ${contractName} start_event '{"event_data"
 // if (sh.exec(startEvent2).code === 0) {
 //   console.log("Test event 2 starts successfully");
 // }
-// if (sh.exec(startEventCmd).code === 0) {
-//   console.log("Start default event successfull");
-// }
+if (sh.exec(startEventCmd).code === 0) {
+  console.log("Start default event successfull");
+}
 // if (sh.exec(startFinishedEvent).code === 0) {
 //   console.log("Start finished event successfull");
 // }
@@ -170,13 +170,13 @@ sh.exec(
   `near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
 );
 sh.exec(
-  `near call ${contractName} referral_checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Congrats! Now you know more about Web3", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Congrats! Now you know more about Web3", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
 );
 
-// sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-// sh.exec(
-//   `near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "jkahfkjashdfs.testnet"}'`
-// );
+sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
+sh.exec(
+  `near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "jkahfkjashdfs.testnet"}'`
+);
 
 // Try to call checkin in ongoing event
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
@@ -189,7 +189,9 @@ sh.exec(
 // sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
-// sh.exec(`near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`);
+sh.exec(
+  `near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`
+);
 
 // Check token status
 // sh.exec(`near view ${contractName} nft_token '{"token_id": "206241575:1:1661000383816756395:211"}'`);
