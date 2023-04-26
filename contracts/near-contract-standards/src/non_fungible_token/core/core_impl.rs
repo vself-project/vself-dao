@@ -201,6 +201,25 @@ impl NonFungibleToken {
         approval_id: Option<u64>,
         memo: Option<String>,
     ) -> (AccountId, Option<HashMap<AccountId, u64>>) {
+
+        // Check token transferability
+        let token_metadata = self
+            .token_metadata_by_id
+            .as_ref()
+            .and_then(|by_id| by_id.get(token_id))
+            .unwrap_or_else(|| env::panic_str("Token's not found"));
+        if let Some(extra) = &token_metadata.extra {
+            let extra: serde_json::Value = near_sdk::serde_json::from_str(extra)
+                .unwrap_or_else(|_| env::panic_str("Failed to parse extra data"));
+            let transfer_is_allowed: bool = extra["transfer_is_allowed"]
+                .as_bool()
+                .unwrap_or_else(|| env::panic_str("Failed to convert transfer_is_allowed to bool"));
+
+            // Assert if transfer is not allowed
+            assert!(transfer_is_allowed, "Transfer is not allowed");
+        }
+
+        // Get current owner
         let owner_id =
             self.owner_by_id.get(token_id).unwrap_or_else(|| env::panic_str("Token not found"));
 

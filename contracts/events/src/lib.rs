@@ -8,6 +8,7 @@ use near_sdk::json_types::Base64VecU8;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, log, near_bindgen, AccountId, BorshStorageKey, PanicOnDefault};
 use std::collections::HashSet;
+use near_sdk::serde_json::json;
 
 mod constants;
 pub mod nft;
@@ -271,6 +272,7 @@ impl Contract {
         let timestamp: u64 = env::block_timestamp();
 
         let event = self.events.get(&event_id).unwrap();
+        let collection_settings = event.settings.clone();
         let quests = event.data.quests.clone();
         let quest = quests.get(reward_index).unwrap();
         let rand: u8 = *env::random_seed().get(0).unwrap();
@@ -278,6 +280,7 @@ impl Contract {
             format!("{}:{}:{}:{}", &event_id, &reward_index, &timestamp, rand);
         let media_url: String = format!("{}", quest.reward_uri);
         let media_hash = Base64VecU8(env::sha256(media_url.as_bytes()));
+        let extra_json = json!({"hashtags": "test", "transfer_is_allowed": collection_settings.transferability.clone()});
 
         let token_metadata = TokenMetadata {
             title: Some(quest.reward_title.clone()),
@@ -289,7 +292,7 @@ impl Contract {
             expires_at: None,
             starts_at: None,
             updated_at: None,
-            extra: Some("Test".to_string()),    // hashtags
+            extra: Some(extra_json.to_string()),
             reference: None,
             reference_hash: None,
         };
@@ -369,7 +372,6 @@ impl Contract {
             reward_index = reward_index + 1;
         }
 
-
         let action_data = ActionData {
             username: username.clone(),
             qr_string: qr_string.clone(),
@@ -377,7 +379,6 @@ impl Contract {
             timestamp,
             ambassador,
         };
-
         log!("Action data: {:?}", action_data);
 
         // Register checkin data
