@@ -8,35 +8,56 @@ const masterAccount =
   process.env.MASTER_ACCOUNT ||
   fs.readFileSync("./neardev/dev-account").toString();
 
-// Start default event
-const start_time = new Date().getTime() * 1000000; // 24.07
-const end_time = start_time + 60 * 24 * 60 * 60 * 1000000000; // + 2 month
+// Start default event (time in 1 billionth of second)
+const start_time = 1681724813000000000; // 17.04
+const end_time = start_time + 30 * 24 * 60 * 60 * 1000000000; // + month
 
-const startEvent1 = `near call ${contractName} start_event '{"event_data": {
+// Start default event "Vself Onboarding"
+const startEventVself = `near call ${contractName} start_event '{"event_data": {
   "event_description":
-  "Test event",
-  "event_name": "Test event 1",
+  "vSelf launches a series of quests which will keep you motivated while you learn about our project and its place inside NEAR ecosystem",
+  "event_name": "vSelf Onboarding Metabuild Quest",
   "finish_time": ${end_time},
   "quests": [{
-    "qr_prefix": "hello",
-    "qr_prefix_len": ${"hello".length},
-    "reward_description": "Welcome to the test!",
-    "reward_title": "vSelf: Tester Badge",
-    "reward_uri": "https://us.123rf.com/450wm/oksanastepova/oksanastepova1805/oksanastepova180500047/102167642-hello-unique-hand-drawn-nursery-poster-with-lettering-in-scandinavian-style-vector-illustration-.jpg?ver=6"
+    "qr_prefix": "https://vself-dev.web.app/vself.apk",
+    "qr_prefix_len": ${"https://vself-dev.web.app/vself.apk".length},
+    "reward_description": "Welcome to the vSelf demo!",
+    "reward_title": "vSelf: Welcome Badge",
+    "reward_uri": "/nft1.png"
   },
   {
-    "qr_prefix": "goodbye",
-    "qr_prefix_len": ${"goodbye".length},
-    "reward_description": "Welcome to the test!",
-    "reward_title": "vSelf: Tester Badge",
-    "reward_uri": "https://www.wallquotes.com/sites/default/files/entr0054_01.jpg"
+    "qr_prefix": "You have registered in the NEAR community",
+    "qr_prefix_len": ${"You have registered in the NEAR community".length},
+    "reward_description": "You have registered in the NEAR community",
+    "reward_title": "vSelf: NEAR User Badge",
+    "reward_uri": "/nft2.png"
+  },
+  {
+    "qr_prefix": "Congrats! Now you know more about Web3",
+    "qr_prefix_len": ${"Congrats! Now you know more about Web3".length},
+    "reward_description": "Congrats! Now you know more about Web3",
+    "reward_title": "vSelf: Early Adopter Badge",
+    "reward_uri": "/nft3.png"
+  },
+  {
+    "qr_prefix": "Thank you <3 and see you soon!",
+    "qr_prefix_len": ${"Thank you <3 and see you soon!".length},
+    "reward_description": "Thank you <3 and see you soon!",
+    "reward_title": "vSelf: Metabuidl Badge",
+    "reward_uri": "/nft4.png"
   }],
-"start_time": ${start_time}}}' --accountId ${masterAccount}`;
+"start_time": ${start_time}},
+"collection_settings": {
+  "signin_request": ${true},
+  "transferability": ${true},
+  "limited_collection": ${true}
+}}' --accountId ${masterAccount}`;
 
-const startEvent2 = `near call ${contractName} start_event '{"event_data": {
+// Start default event "Animals"
+const startEventAnimals = `near call ${contractName} start_event '{"event_data": {
   "event_description":
   "Test event",
-  "event_name": "Test event 2",
+  "event_name": "Animals",
   "finish_time": ${end_time},
   "quests": [{
     "qr_prefix": "cat",
@@ -59,19 +80,20 @@ const startEvent2 = `near call ${contractName} start_event '{"event_data": {
     "reward_title": "vSelf: Tester Badge",
     "reward_uri": "https://i.pinimg.com/550x/43/e2/26/43e226270cbc24c2fd7efeff710da7d1.jpg"
   }],
-"start_time": ${start_time}}}' --accountId ${masterAccount}`;
+"start_time": ${start_time}},
+"collection_settings": {
+  "signin_request": ${false},
+  "transferability": ${false},
+  "limited_collection": ${false}
+}}' --accountId ${masterAccount}`;
 
-// Start both events the command
-if (sh.exec(startEvent1).code === 0) {
-  console.log("Test event 1 starts successfully");
+// Run start of both events
+if (sh.exec(startEventVself).code === 0) {
+  console.log("Event startEventVself begins");
 }
-if (sh.exec(startEvent2).code === 0) {
-  console.log("Test event 2 starts successfully");
+if (sh.exec(startEventAnimals).code === 0) {
+  console.log("Test event begins");
 }
-
-// Some tests
-const event1_id = 3742138452; //u32 for now
-const event2_id = 755591911; //u32 for now
 sh.exec(
   `near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`
 );
