@@ -1,6 +1,8 @@
 const sh = require("shelljs");
 const fs = require("fs");
 
+const { extractTokenID, extractResult } = require("./utils");
+
 const contractName =
   fs.readFileSync("./neardev/dev-account").toString() ||
   process.env.EVENTS_CONTRACT;
@@ -48,7 +50,7 @@ const startEventCmd = `near call ${contractName} start_event '{"event_data": {
 "start_time": ${start_time}},
 "collection_settings": {
   "signin_request": ${true},
-  "transferability": ${true},
+  "transferability": ${false},
   "limited_collection": ${true}
 }}' --accountId ${masterAccount}`;
 
@@ -163,20 +165,34 @@ sh.exec(
 // sh.exec(
 //   `near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "You have" }' --accountId ${masterAccount} --depositYocto 1 --gas 300000000000000`
 // );
-sh.exec(
-  `near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${contractName} --depositYocto 10000000000000000000000 --gas 300000000000000`
+// sh.exec(
+//   `near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${contractName} --depositYocto 10000000000000000000000 --gas 300000000000000`
+// );
+
+// Successfull checkins
+let token_id = sh.exec(
+  `near call ${contractName} checkin '{"event_id": ${eventId}, "username": "${masterAccount}", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
 );
+token_id = extractTokenID(token_id);
+
+// let token_owner = sh.exec(
+//   `near view ${contractName} get_nft_owner '{"token_id": "${token_id}"}'`
+// );
+// token_owner = extractResult(token_owner);
+
+// token_id = sh.exec(
+//   `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Congrats! Now you know more about Web3", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+// );
+
+// Transfer
 sh.exec(
-  `near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
-);
-sh.exec(
-  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Congrats! Now you know more about Web3", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+  `near call ${contractName} nft_transfer '{"receiver_id": "jkahfkjashdfs.testnet", "token_id": "${token_id}"}' --accountId ${masterAccount} --depositYocto 1`
 );
 
-sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
-sh.exec(
-  `near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "jkahfkjashdfs.testnet"}'`
-);
+// sh.exec(`near view ${contractName} get_event_stats '{"event_id": ${eventId}}'`);
+// sh.exec(
+//   `near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "jkahfkjashdfs.testnet"}'`
+// );
 
 // Try to call checkin in ongoing event
 // sh.exec(`near call ${contractName} checkin '{"event_id": ${eventId}, "username": "jkahfkjashdfs.testnet", "request": "Ground control to major Tom" }' --accountId ${masterAccount} --depositYocto 9000000000000000000000 --gas 300000000000000`);
@@ -189,12 +205,12 @@ sh.exec(
 // sh.exec(`near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "ilerik.testnet"}'`);
 // sh.exec(`near view ${contractName} get_user_balance '{"event_id": ${eventId}, "account_id": "sergantche.testnet"}'`);
-sh.exec(
-  `near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`
-);
+// sh.exec(
+//   `near view ${contractName} get_event_actions '{"event_id": ${eventId}, "from_index": 0, "limit": 100}'`
+// );
 
 // Check token status
-// sh.exec(`near view ${contractName} nft_token '{"token_id": "206241575:1:1661000383816756395:211"}'`);
+sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
 
 // Try to transfer the token
 // sh.exec(`near call events_v5.sergantche.testnet nft_transfer '{"receiver_id": "ilerik.testnet", "token_id": "206241575:1:1660998159049330033:11", "memo": "Go Team :)"}' --accountId sergantche.testnet --depositYocto 1`);
