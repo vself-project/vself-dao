@@ -94,7 +94,7 @@ struct EventStats {
 }
 ```
 
-### Change state methods
+### Call methods
 
 - `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event.
 
@@ -169,7 +169,7 @@ struct Contract {
 }
 ```
 
-### Change state methods
+### Call methods
 
 - `add_community(community_data: CommunityData)`creates new community & returns the _community_id_.
 - `remove_community(community_id: String)` delates community with _community_id_.
