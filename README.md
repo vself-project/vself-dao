@@ -93,6 +93,15 @@ struct EventStats {
     total_actions: u64,
 }
 ```
+Settings of SBT collection
+```
+struct CollectionSettings {
+    signin_request: bool,
+    transferability: bool,
+    limited_collection: bool,
+}
+```
+
 
 ### Call methods
 
