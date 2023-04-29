@@ -12,7 +12,7 @@ Frontend web app & API endpoints are available in this [repo](https://github.com
 
 ### SBT collection toolkit
 
-- [testnet contract](https://explorer.testnet.near.org/accounts/events_v22.sergantche.testnet) deployed at events_v29.sergantche.testnet
+- [testnet contract](https://explorer.testnet.near.org/accounts/events_v31.sergantche.testnet) deployed at events_v31.sergantche.testnet
 - [mainnet contract](https://explorer.near.org/accounts/v3.event.vself.near) deployed at v3.event.vself.near
 
 ### Community management toolkit
