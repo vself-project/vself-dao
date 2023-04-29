@@ -4,7 +4,7 @@
 
 # vSelf DAO
 
-Current repo contains vSelf smart contracts source code.
+Current repo contains vSelf smart contracts source code. It includes smart contract for SBT collection [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/events) and smart contract for community management [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/communities).
 
 Frontend web app & API endpoints are available in this [repo](https://github.com/vself-project/vself-beta).
 
