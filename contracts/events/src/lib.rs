@@ -349,7 +349,8 @@ impl Contract {
         let limited_collection = event.settings.limited_collection.clone();
         if limited_collection {
             let user_id = env::predecessor_account_id();
-            assert!(self.ongoing_events.contains_key(&user_id), "No rights to issue a token");
+            let user_events = self.ongoing_events.get(&user_id).unwrap_or(HashSet::new());
+            assert!(user_events.contains(&event_id), "No rights to issue a token");
         }
 
         // Check if account seems valid
