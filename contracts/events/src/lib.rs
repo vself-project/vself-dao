@@ -61,6 +61,7 @@ pub struct CollectionSettings {
     signin_request: bool,
     transferability: bool,
     limited_collection: bool,
+    ambassador_allowed: bool,
 }
 
 #[derive(Clone, Debug, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]

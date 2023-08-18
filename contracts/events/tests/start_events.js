@@ -50,7 +50,8 @@ const startEventVself = `near call ${contractName} start_event '{"event_data": {
 "collection_settings": {
   "signin_request": ${true},
   "transferability": ${true},
-  "limited_collection": ${true}
+  "limited_collection": ${true},
+  "ambassador_allowed": ${true}
 }}' --accountId ${masterAccount}`;
 
 // Start default event "Animals"
@@ -84,7 +85,8 @@ const startEventAnimals = `near call ${contractName} start_event '{"event_data":
 "collection_settings": {
   "signin_request": ${false},
   "transferability": ${false},
-  "limited_collection": ${false}
+  "limited_collection": ${false},
+  "ambassador_allowed": ${false}
 }}' --accountId ${masterAccount}`;
 
 // Run start of both events
