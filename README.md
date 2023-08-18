@@ -4,7 +4,7 @@
 
 # vSelf DAO
 
-Current repo contains vSelf smart contracts source code.
+Current repo contains vSelf smart contracts source code. It includes smart contract for SBT collection [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/events) and smart contract for community management [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/communities).
 
 Frontend web app & API endpoints are available in this [repo](https://github.com/vself-project/vself-beta).
 
@@ -12,7 +12,7 @@ Frontend web app & API endpoints are available in this [repo](https://github.com
 
 ### SBT collection toolkit
 
-- [testnet contract](https://explorer.testnet.near.org/accounts/events_v22.sergantche.testnet) deployed at events_v29.sergantche.testnet
+- [testnet contract](https://explorer.testnet.near.org/accounts/events_v32.sergantche.testnet) deployed at events_v32.sergantche.testnet
 - [mainnet contract](https://explorer.near.org/accounts/v3.event.vself.near) deployed at v3.event.vself.near
 
 ### Community management toolkit
@@ -93,8 +93,17 @@ struct EventStats {
     total_actions: u64,
 }
 ```
+Settings of SBT collection
+```
+struct CollectionSettings {
+    signin_request: bool,
+    transferability: bool,
+    limited_collection: bool,
+}
+```
 
-### Change state methods
+
+### Call methods
 
 - `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event.
 
@@ -169,7 +178,7 @@ struct Contract {
 }
 ```
 
-### Change state methods
+### Call methods
 
 - `add_community(community_data: CommunityData)`creates new community & returns the _community_id_.
 - `remove_community(community_id: String)` delates community with _community_id_.
