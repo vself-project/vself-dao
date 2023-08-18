@@ -6,7 +6,7 @@ const CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY =
   process.env.CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY === "true";
 
 // Initial contract account balance
-let initialBalance = 24;
+let initialBalance = 21;
 
 // Recreate account
 if (DELETE_BEFORE_DEPLOY) {

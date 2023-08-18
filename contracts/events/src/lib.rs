@@ -8,6 +8,7 @@ use near_sdk::json_types::Base64VecU8;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, log, near_bindgen, AccountId, BorshStorageKey, PanicOnDefault};
 use std::collections::HashSet;
+use near_sdk::serde_json::json;
 
 mod constants;
 pub mod nft;
@@ -23,7 +24,7 @@ fn read_be_u32(input: &mut &[u8]) -> u32 {
 #[derive(Clone, Debug, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct QuestData {
-    pub qr_prefix_enc: String,
+    pub qr_prefix: String,
     pub qr_prefix_len: usize,
     pub reward_title: String,
     pub reward_description: String,
@@ -56,11 +57,21 @@ pub struct EventStats {
 
 #[derive(Clone, Debug, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
+pub struct CollectionSettings {
+    signin_request: bool,
+    transferability: bool,
+    limited_collection: bool,
+    ambassador_allowed: bool,
+}
+
+#[derive(Clone, Debug, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct ActionData {
     timestamp: u64,
     username: String,
     qr_string: String,
     reward_index: usize,
+    ambassador: Option<String>,
 }
 
 #[derive(Clone, BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
@@ -87,6 +98,7 @@ pub struct Event {
     pub nonce: u32, // Id
     pub data: EventData,
     pub stats: EventStats,
+    pub settings: CollectionSettings,
 }
 
 #[near_bindgen]
@@ -166,7 +178,7 @@ impl Contract {
 
     /// Initiate next event
     #[payable]
-    pub fn start_event(&mut self, event_data: EventData) -> u32 {
+    pub fn start_event(&mut self, event_data: EventData, collection_settings: CollectionSettings) -> u32 {
         let user_id = env::predecessor_account_id();
         let timestamp: u64 = env::block_timestamp();
         let hash: Vec<u8> = env::sha256(&event_data.try_to_vec().unwrap());
@@ -175,7 +187,7 @@ impl Contract {
         // assert event doesnt exist
         assert!(
             self.events.get(&nonce).is_none(),
-            "Event with provided already exists"
+            "Event with provided data already exists"
         );
 
         let initial_stats = EventStats {
@@ -203,6 +215,7 @@ impl Contract {
             nonce, // Unique event ID
             data: event_data,
             stats: initial_stats,
+            settings: collection_settings,
         };
 
         // Update index by user
@@ -260,6 +273,7 @@ impl Contract {
         let timestamp: u64 = env::block_timestamp();
 
         let event = self.events.get(&event_id).unwrap();
+        let collection_settings = event.settings.clone();
         let quests = event.data.quests.clone();
         let quest = quests.get(reward_index).unwrap();
         let rand: u8 = *env::random_seed().get(0).unwrap();
@@ -267,6 +281,7 @@ impl Contract {
             format!("{}:{}:{}:{}", &event_id, &reward_index, &timestamp, rand);
         let media_url: String = format!("{}", quest.reward_uri);
         let media_hash = Base64VecU8(env::sha256(media_url.as_bytes()));
+        let extra_json = json!({"hashtags": "test", "transfer_is_allowed": collection_settings.transferability.clone()});
 
         let token_metadata = TokenMetadata {
             title: Some(quest.reward_title.clone()),
@@ -278,7 +293,7 @@ impl Contract {
             expires_at: None,
             starts_at: None,
             updated_at: None,
-            extra: Some("Test".to_string()),    // hashtags
+            extra: Some(extra_json.to_string()),
             reference: None,
             reference_hash: None,
         };
@@ -305,6 +320,18 @@ impl Contract {
         username: String,
         request: String,
     ) -> Option<ActionResult> {
+        self.checkin_with_ambassador(event_id, username, request, None)
+    }
+
+    // #[payable]
+    #[payable]
+    pub fn checkin_with_ambassador(
+        &mut self,
+        event_id: u32,
+        username: String,
+        request: String,
+        ambassador: Option<String>,
+    ) -> Option<ActionResult> {
         // Assert event is active
         assert!(
             self.public_events.contains(&event_id),
@@ -319,6 +346,14 @@ impl Contract {
             "Event with given id is expired"
         );
 
+        // Check the collection access
+        let limited_collection = event.settings.limited_collection.clone();
+        if limited_collection {
+            let user_id = env::predecessor_account_id();
+            let user_events = self.ongoing_events.get(&user_id).unwrap_or(HashSet::new());
+            assert!(user_events.contains(&event_id), "No rights to issue a token");
+        }
+
         // Check if account seems valid
         assert!(
             AccountId::try_from(username.clone()).is_ok(),
@@ -330,11 +365,9 @@ impl Contract {
         let qr_string = request.clone();
         let quests = event.data.quests.clone();
         let mut reward_index = 0;
-        for quest in &quests {
+        for quest in &quests {    
             if let Some(request_prefix) = request.get(0..quest.qr_prefix_len) {
-                let hashed_input = env::sha256(request_prefix.as_bytes());
-                let hashed_input_hex = hex::encode(&hashed_input);
-                if hashed_input_hex == quest.qr_prefix_enc {
+                if request_prefix == quest.qr_prefix {
                     break;
                 };
             }
@@ -346,8 +379,8 @@ impl Contract {
             qr_string: qr_string.clone(),
             reward_index,
             timestamp,
+            ambassador,
         };
-
         log!("Action data: {:?}", action_data);
 
         // Register checkin data
