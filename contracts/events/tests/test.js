@@ -113,12 +113,12 @@ const startFinishedEvent = `near call ${contractName} start_event '{"event_data"
 "start_time": ${start_time}}}' --accountId ${masterAccount}`;
 
 // Start all events
-if (sh.exec(startEventVself).code === 0) {
-  console.log("Start Vself Onboarding event");
-}
-if (sh.exec(startEventAnimals).code === 0) {
-  console.log("Start test event");
-}
+// if (sh.exec(startEventVself).code === 0) {
+//   console.log("Start Vself Onboarding event");
+// }
+// if (sh.exec(startEventAnimals).code === 0) {
+//   console.log("Start test event");
+// }
 // if (sh.exec(startFinishedEvent).code === 0) {
 //   console.log("Start finished event");
 // }
@@ -145,6 +145,12 @@ sh.exec(
 // sh.exec(
 //   `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "Congrats! Now you know more about Web3", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
 // );
+sh.exec(
+  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "Thank you <3 and see you soon!", "ambassador": "sergantche.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+);
+sh.exec(
+  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "You have registered in the NEAR community", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+);
 // let token_id = sh.exec(
 //   `near call ${contractName} checkin '{"event_id": ${eventId1}, "username": "jkahfkjashdfs.testnet", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
 // );
