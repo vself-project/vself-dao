@@ -1,6 +1,6 @@
 # vSelf Events Contract
 
-A contract which mints non-transferable NFT (soulboud token) to recipient account on successful checkin (e.g. via claim link). Each NFT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `<reward_index>` is an index of reward, in case many different rewards set up during the start of specific event. View method `get_user_balance(event_id: u32, account_id: AccountId)` can be used to get information about one's obtained rewards.
+A contract which mints non-transferable NFT (soulboud token) to recipient account on successful checkin (e.g. via claim link). Each NFT is uniquely identified by a tuple `<event_id>:<reward_index>`, where `<reward_index>` is an index of reward, in case many different rewards set up during the start of specific event. View method `get_user_balance(event_id: u32, account_id: AccountId)` can be used to get information about one's obtained rewards.
 
 ## Deployment
 
@@ -32,7 +32,7 @@ To run simulation tests:
 
 - `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event. _EventData_ consists of following fields: _event_name_, _event_description_, _start_time_, _finish_time_ and _quests_. _quests_ is an array of _QuestData_ that contains the data about a specific quest;
 
-- `checkin(event_id: u32, username: String, request: String)` checks if the `sha256(request)` matches the value _qr_prefix_enc_ specified in one of the quests of the event with id _event_id_. In case of success the contract mints non transferable NFT specified in the quest and sets NEAR account _username_ as its owner;
+- `checkin(event_id: u32, username: String, request: String)` checks if the `request` matches the value _qr_prefix_ specified in one of the quests of the event with id _event_id_. In case of success the contract mints non transferable NFT specified in the quest and sets NEAR account _username_ as its owner;
 
 - `stop_event(event_id: u32)` set event with id _event_id_ as inactive disallowing checkins;
 
