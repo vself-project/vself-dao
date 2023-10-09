@@ -6,7 +6,7 @@ const CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY =
   process.env.CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY === "true";
 
 // Initial contract account balance
-let initialBalance = 24;
+let initialBalance = 25;
 
 // Recreate account
 if (DELETE_BEFORE_DEPLOY) {
@@ -17,7 +17,7 @@ if (DELETE_BEFORE_DEPLOY) {
   );
 
   // Copy credentials for later deploy
-  sh.exec(`cp ~/.near-credentials/testnet/${EVENTS_CONTRACT}.json ./creds`);
+  sh.exec(`cp ~/.near-credentials/mainnet/${EVENTS_CONTRACT}.json ./creds`);
 } else if (CREATE_CONTRACT_ACCOUNT_BEFORE_DEPLOY) {
   console.log("Create contract account before deploy: ", EVENTS_CONTRACT);
   sh.exec(
@@ -25,7 +25,7 @@ if (DELETE_BEFORE_DEPLOY) {
   );
 
   // Copy credentials for later deploy
-  sh.exec(`cp ~/.near-credentials/testnet/${EVENTS_CONTRACT}.json ./creds`);
+  sh.exec(`cp ~/.near-credentials/mainnet/${EVENTS_CONTRACT}.json ./creds`);
 }
 
 // Deploy contract
@@ -35,4 +35,4 @@ sh.exec(
 sh.exec(`near call ${EVENTS_CONTRACT} new --accountId ${EVENTS_CONTRACT}`);
 
 // Copy credentials for later deploy
-sh.exec(`cp ~/.near-credentials/testnet/${EVENTS_CONTRACT}.json ./creds`);
+sh.exec(`cp ~/.near-credentials/mainnet/${EVENTS_CONTRACT}.json ./creds`);
