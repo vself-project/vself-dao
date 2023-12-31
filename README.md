@@ -66,7 +66,7 @@ struct QuestData {
 }
 ```
 
-NFT collection
+Event data
 
 ```
 struct EventData {
@@ -107,7 +107,7 @@ struct CollectionSettings {
 
 - `start_event(event_data: EventData, collection_settings: CollectionSettings)` runs new event with _event_data_ and _collection_settings_ and returns id of created event.
 
-- `checkin(event_id: u32, username: String, request: String)` checks if the `request` contains _qr_prefix_ as a substring and starts with it. specified in one of the quests of the event with _event_id_. In case of success the contract mints SBT specified in the quest to the NEAR account _username_ owner;
+- `checkin(event_id: u32, username: String, request: String)` checks if the `request` contains _qr_prefix_ as a substring and starts with it. specified in one of the quests of the event with _event_id_. In case of success the contract mints NFT specified in the quest to the NEAR account _username_ owner;
 
 - `stop_event(event_id: u32)` sets event with _event_id_ as inactive disallowing checkins;
 
@@ -124,6 +124,8 @@ struct CollectionSettings {
 - `get_user_balance(event_id: u32, account_id: AccountId)` returns array of boolean values corresponding to array of quests for the event with _event_id_. If _account_id_ made successfull checkin for a quest then value is true and the value is false otherwise;
 
 - `get_event_actions(event_id: u32, from_index: u64, limit: u64)` returns array of data about successful and unsuccessful checkins of the event with _event_id_ with pagination (using _from_index_ and _limit_);
+
+- `get_collection_settings(event_id: u32)` returns collection settings for the event _event_id_;
 
 ## Community smart contact
 
