@@ -113,98 +113,113 @@ const startFinishedEvent = `near call ${contractName} start_event '{"event_data"
 "start_time": ${start_time}}}' --accountId ${masterAccount}`;
 
 // Start all events
-// if (sh.exec(startEventVself).code === 0) {
-//   console.log("Start Vself Onboarding event");
-// }
-// if (sh.exec(startEventAnimals).code === 0) {
-//   console.log("Start test event");
-// }
+if (sh.exec(startEventVself).code === 0) {
+  console.log("Start Vself Onboarding event");
+}
+if (sh.exec(startEventAnimals).code === 0) {
+  console.log("Start test event");
+}
 // if (sh.exec(startFinishedEvent).code === 0) {
 //   console.log("Start finished event");
 // }
 
-// Some tests
+// Some constants for testing
 const eventId1 = 389418135;
-const eventId2 = 3666939948;
+const eventId2 = 1287886906;
 const finishedEventId = 1816186509;
+const account1 = "ilerik.testnet";
+const account2 = "jkahfkjashdfs.testnet";
+let token_id = 0;
+
+// Get all ongoing events
+console.log("!!!Ongoing events!!!");
 sh.exec(
   `near view ${contractName} get_ongoing_events '{"from_index": 0, "limit": 100}' --accountId ${contractName}`
 );
 
-// // Check collection settings
+// Check collection settings
+console.log("!!!Check collection settings!!!");
 sh.exec(
   `near view ${contractName} get_collection_settings '{"event_id": ${eventId1}}' --accountId ${contractName}`
 );
 
 // Failed checkin because the collection is limited
-// sh.exec(
-//   `near call ${contractName} checkin '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${contractName} --depositYocto 10000000000000000000000 --gas 300000000000000`
-// );
+console.log("!!!Failed checkin!!!");
+sh.exec(
+  `near call ${contractName} checkin '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${contractName} --depositYocto 10000000000000000000000 --gas 300000000000000`
+);
 
 // Successfull checkins
-// sh.exec(
-//   `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "Congrats! Now you know more about Web3", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
-// );
+console.log("!!!Successfull checkins!!!");
 sh.exec(
-  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "Thank you <3 and see you soon!", "ambassador": "sergantche.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "Congrats! Now you know more about Web3", "ambassador": "${masterAccount}" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
 );
 sh.exec(
-  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "You have registered in the NEAR community", "ambassador": "ilerik.testnet" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${account1}", "request": "Thank you <3 and see you soon!", "ambassador": "${masterAccount}" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
 );
-// let token_id = sh.exec(
-//   `near call ${contractName} checkin '{"event_id": ${eventId1}, "username": "jkahfkjashdfs.testnet", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
-// );
-// token_id = extractTokenID(token_id);
+sh.exec(
+  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "You have registered in the NEAR community", "ambassador": "${account1}" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+);
+token_id = sh.exec(
+  `near call ${contractName} checkin '{"event_id": ${eventId1}, "username": "${masterAccount}", "request": "https://vself-dev.web.app/vself.apk" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+);
+token_id = extractTokenID(token_id);
 
-// // Check event stats, data and user balance
-// sh.exec(
-//   `near view ${contractName} get_event_stats '{"event_id": ${eventId1}}'`
-// );
-// sh.exec(
-//   `near view ${contractName} get_event_actions '{"event_id": ${eventId1}, "from_index": 0, "limit": 100}'`
-// );
-// sh.exec(
-//   `near view ${contractName} get_user_balance '{"event_id": ${eventId1}, "account_id": "jkahfkjashdfs.testnet"}'`
-// );
+// Check event stats, data and user balance
+console.log("!!!Event stats, data and user balance!!!");
+sh.exec(
+  `near view ${contractName} get_event_stats '{"event_id": ${eventId1}}'`
+);
+sh.exec(
+  `near view ${contractName} get_event_actions '{"event_id": ${eventId1}, "from_index": 0, "limit": 100}'`
+);
+sh.exec(
+  `near view ${contractName} get_user_balance '{"event_id": ${eventId1}, "account_id": "${account1}"}'`
+);
 
-// // Successfull transfer
-// sh.exec(
-//   `near call ${contractName} nft_transfer '{"receiver_id": "jkahfkjashdfs.testnet", "token_id": "${token_id}"}' --accountId ${masterAccount} --depositYocto 1`
-// );
-// sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
+// Successfull NFT transfer
+console.log("!!!Successfull token transfer!!!");
+sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
+sh.exec(
+  `near call ${contractName} nft_transfer '{"receiver_id": "${account1}", "token_id": "${token_id}"}' --accountId ${masterAccount} --depositYocto 1`
+);
+sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
 
-// // Check second collection settings
-// console.log("!!!Second collection!!!");
-// sh.exec(
-//   `near view ${contractName} get_collection_settings '{"event_id": ${eventId2}}' --accountId ${contractName}`
-// );
+// Check second collection settings
+console.log("!!!Second collection!!!");
+sh.exec(
+  `near view ${contractName} get_collection_settings '{"event_id": ${eventId2}}' --accountId ${contractName}`
+);
 
-// // Successfull checkins
-// sh.exec(
-//   `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId2}, "username": "jkahfkjashdfs.testnet", "request": "possum", "ambassador": "ilerik.testnet" }' --accountId ${contractName} --depositYocto 10000000000000000000000 --gas 300000000000000`
-// );
-// token_id = sh.exec(
-//   `near call ${contractName} checkin '{"event_id": ${eventId2}, "username": "${masterAccount}", "request": "dog" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
-// );
-// token_id = extractTokenID(token_id);
+// Successfull checkins
+console.log("!!!Successfull checkins!!!");
+sh.exec(
+  `near call ${contractName} checkin_with_ambassador '{"event_id": ${eventId2}, "username": "${account2}", "request": "possum", "ambassador": "${account1}" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+);
+token_id = sh.exec(
+  `near call ${contractName} checkin '{"event_id": ${eventId2}, "username": "${masterAccount}", "request": "dog" }' --accountId ${masterAccount} --depositYocto 10000000000000000000000 --gas 300000000000000`
+);
+token_id = extractTokenID(token_id);
 
-// // Check event stats, data and user balance
-// sh.exec(
-//   `near view ${contractName} get_event_stats '{"event_id": ${eventId2}}'`
-// );
-// sh.exec(
-//   `near view ${contractName} get_event_actions '{"event_id": ${eventId2}, "from_index": 0, "limit": 100}'`
-// );
-// sh.exec(
-//   `near view ${contractName} get_user_balance '{"event_id": ${eventId2}, "account_id": "jkahfkjashdfs.testnet"}'`
-// );
+// Check event stats, data and user balance
+console.log("!!!Event stats, data and user balance!!!");
+sh.exec(
+  `near view ${contractName} get_event_stats '{"event_id": ${eventId2}}'`
+);
+sh.exec(
+  `near view ${contractName} get_event_actions '{"event_id": ${eventId2}, "from_index": 0, "limit": 100}'`
+);
+sh.exec(
+  `near view ${contractName} get_user_balance '{"event_id": ${eventId2}, "account_id": "${account2}"}'`
+);
 
-// // Failed transfer
-// sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
-// sh.exec(
-//   `near call ${contractName} nft_transfer '{"receiver_id": "jkahfkjashdfs.testnet", "token_id": "${token_id}"}' --accountId ${masterAccount} --depositYocto 1`
-// );
-// sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
+// Failed NFT transfer
+console.log("!!!Failed token transfer!!!");
+sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
+sh.exec(
+  `near call ${contractName} nft_transfer '{"receiver_id": "${account2}", "token_id": "${token_id}"}' --accountId ${masterAccount} --depositYocto 1`
+);
+sh.exec(`near view ${contractName} nft_token '{"token_id": "${token_id}"}'`);
 
 // exit script with the same code as the build command
 process.exit();

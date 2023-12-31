@@ -137,7 +137,7 @@ impl Contract {
         // Common metadata for all minted SBT
         let metadata = NFTContractMetadata {
             spec: NFT_METADATA_SPEC.to_string(),
-            name: "vSelf Events SBTs".to_string(),
+            name: "vSelf rewards".to_string(),
             symbol: "VSELF".to_string(),
             icon: Some(DATA_IMAGE_SVG_NEAR_ICON.to_string()),
             base_uri: Some(BASE_URI.to_string()),
