@@ -268,7 +268,6 @@ impl Contract {
     /// Issue reward token
     #[payable]
     fn issue_nft_reward(&mut self, receiver_id: AccountId, event_id: u32, reward_index: usize) {
-        // Decide what to transfer for the player
         let contract_id = env::current_account_id();
         let timestamp: u64 = env::block_timestamp();
 

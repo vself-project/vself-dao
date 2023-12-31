@@ -4,13 +4,13 @@
 
 # vSelf DAO
 
-Current repo contains vSelf smart contracts source code. It includes smart contract for SBT collection [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/events) and smart contract for community management [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/communities).
+Current repo contains vSelf smart contracts source code. It includes smart contract providing the functionality set up, mint, and distribute NFTs (SBT or transferable) [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/events) and one for community management [here](https://github.com/vself-project/vself-dao/tree/events_v2/contracts/communities).
 
 Frontend web app & API endpoints are available in this [repo](https://github.com/vself-project/vself-beta).
 
 ## Deployment
 
-### SBT collection toolkit
+### Tokens collection toolkit
 
 - [testnet contract](https://explorer.testnet.near.org/accounts/events_v33.sergantche.testnet) deployed at events_v33.sergantche.testnet
 - [mainnet contract](https://nearblocks.io/address/v4.event.vself.near) deployed at v4.event.vself.near
@@ -24,15 +24,15 @@ Frontend web app & API endpoints are available in this [repo](https://github.com
 
 - [SBT events functionality](https://vself-project.gitbook.io/vself-project-documentation/sbt-collection-toolkit)
 - [SBT events rates](https://vself-project.gitbook.io/vself-project-documentation/sbt-collection-toolkit/payment)
-- [Community toolkit functionality](https://vself-project.gitbook.io/vself-project-documentation/sbt-collection-toolkit)
+- [Community toolkit functionality](https://vself-project.gitbook.io/vself-project-documentation/community-management-toolkit)
 
-## SBT smart contact
+## NFT collection smart contract
 
 ### Synopsis
 
-This contract mints non-transferable NFT (Soul Boud Token) to recipient account on successful checkin (e.g. via claim link or QR-code).
+This contract mints NFT to recipient account on successful checkin (e.g. via claim link or QR-code).
 
-Each SBT is uniquely identified by a tuple `<event_id>:<reward_inedex>`, where `<reward_index>` is the index of the reward from the `<event_id>` SBT collection.
+Each token is uniquely identified by a tuple `<event_id>:<reward_index>`, where `<reward_index>` is the index of the reward from the `<event_id>` NFT collection.
 
 ### Installation
 
@@ -44,23 +44,21 @@ yarn events:build
 Set values for `EVENTS_CONTRACT` (account on which the contract will be deployed) and `MASTER_ACCOUNT` (account from which the contract subaccount will be created) in `./config/deployment.env`
 
 ```bash
-#Testnet run
+#Testnet contract deployment
 yarn events:deploy
-```
 
-```bash
-#Mainnet run
+#Mainnet contract run
 NEAR_ENV=mainnet
 yarn events:deploy
 ```
 
 ### Data structure
 
-SBT reward
+NFT reward
 
 ```
 struct QuestData {
-   qr_prefix_enc: String,
+   qr_prefix: String,
    qr_prefix_len: usize,
    reward_title: String,
    reward_description: String,
@@ -68,7 +66,7 @@ struct QuestData {
 }
 ```
 
-SBT collection
+Event data
 
 ```
 struct EventData {
@@ -93,21 +91,23 @@ struct EventStats {
     total_actions: u64,
 }
 ```
-Settings of SBT collection
+
+Settings of NFT collection
+
 ```
 struct CollectionSettings {
     signin_request: bool,
     transferability: bool,
     limited_collection: bool,
+    ambassador_allowed: bool,
 }
 ```
 
-
 ### Call methods
 
-- `start_event(event_data: EventData)` runs new event with _event_data_ and returns id of created event.
+- `start_event(event_data: EventData, collection_settings: CollectionSettings)` runs new event with _event_data_ and _collection_settings_ and returns id of created event.
 
-- `checkin(event_id: u32, username: String, request: String)` checks if the `sha256(request)` matches the value _qr_prefix_enc_ specified in one of the quests of the event with _event_id_. In case of success the contract mints SBT specified in the quest to the NEAR account _username_ owner;
+- `checkin(event_id: u32, username: String, request: String)` checks if the `request` contains _qr_prefix_ as a substring and starts with it. specified in one of the quests of the event with _event_id_. In case of success the contract mints NFT specified in the quest to the NEAR account _username_ owner;
 
 - `stop_event(event_id: u32)` sets event with _event_id_ as inactive disallowing checkins;
 
@@ -124,6 +124,8 @@ struct CollectionSettings {
 - `get_user_balance(event_id: u32, account_id: AccountId)` returns array of boolean values corresponding to array of quests for the event with _event_id_. If _account_id_ made successfull checkin for a quest then value is true and the value is false otherwise;
 
 - `get_event_actions(event_id: u32, from_index: u64, limit: u64)` returns array of data about successful and unsuccessful checkins of the event with _event_id_ with pagination (using _from_index_ and _limit_);
+
+- `get_collection_settings(event_id: u32)` returns collection settings for the event _event_id_;
 
 ## Community smart contact
 
